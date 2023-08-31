@@ -1,17 +1,17 @@
 package com.art.shooter.chars;
 
+import com.art.shooter.entities.BulletEntity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 
 public class MainCharacter extends ADrawablePerson {
     private float velX;
     private float velY;
-    private float posX;
-    private float posY;
     private Sprite characterSprite;
     private final float SPEED = 120f;
 
@@ -22,6 +22,7 @@ public class MainCharacter extends ADrawablePerson {
     }
 
     public MainCharacter() {
+        pos = new Vector2();
         velX = SPEED;
         velY = SPEED;
         Texture img = new Texture("shooter.png");
@@ -33,7 +34,7 @@ public class MainCharacter extends ADrawablePerson {
     private void lookAtCursor () {
         final int x = Gdx.input.getX();
         final int y = Gdx.graphics.getHeight() - Gdx.input.getY();
-        float angle = (float) Math.atan2(y - posY, x - posX);
+        float angle = (float) Math.atan2(y - pos.y, x - pos.x);
         float angleDegrees = MathUtils.radiansToDegrees * angle - 90;
         characterSprite.setRotation(angleDegrees);
     }
@@ -44,25 +45,36 @@ public class MainCharacter extends ADrawablePerson {
 
     public void update () {
         lookAtCursor();
+        handleInput();
+    }
+
+    public void handleInput () {
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            posY += velY * Gdx.graphics.getDeltaTime();
+            pos.y += velY * Gdx.graphics.getDeltaTime();
         }
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            posY -= velY * Gdx.graphics.getDeltaTime();
+            pos.y -= velY * Gdx.graphics.getDeltaTime();
         }
         if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            posX += velX * Gdx.graphics.getDeltaTime();
+            pos.x += velX * Gdx.graphics.getDeltaTime();
         }
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            posX -= velX * Gdx.graphics.getDeltaTime();
+            pos.x -= velX * Gdx.graphics.getDeltaTime();
         }
-
+        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+            shoot();
+        }
     }
+
 
     public void draw (Batch batch) {
         update();
-        characterSprite.setPosition(posX, posY);
+        characterSprite.setPosition(pos.x, pos.y);
         characterSprite.draw(batch);
+    }
+
+    public Vector2 getPosition () {
+        return this.pos;
     }
 
 }
