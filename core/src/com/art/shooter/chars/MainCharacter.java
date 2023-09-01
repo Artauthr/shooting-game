@@ -1,6 +1,8 @@
 package com.art.shooter.chars;
 
+import com.art.shooter.entities.ASimpleEntity;
 import com.art.shooter.entities.BulletEntity;
+import com.art.shooter.entities.EntitySystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
@@ -17,12 +19,6 @@ public class MainCharacter extends ADrawablePerson {
     private final float SPEED = 120f;
     private Vector2 direction;
     private Batch batch;
-
-    private enum State {
-        IDLE,
-        MOVING,
-        SHOOTING;
-    }
 
     public MainCharacter() {
         pos = new Vector2();
@@ -43,9 +39,8 @@ public class MainCharacter extends ADrawablePerson {
     }
 
     private Vector2 getDirection () {
-        Vector2 cursorPos = new Vector2(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());  // Cursor position
-        direction = new Vector2();
-        direction.set(cursorPos.x - pos.x, cursorPos.y - pos.y);
+        Vector2 cursorPos = new Vector2(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
+        Vector2 direction = new Vector2(cursorPos.x - pos.x, cursorPos.y - pos.y);
         direction.nor();  // Normalize the vector
         return direction;
     }
@@ -56,8 +51,12 @@ public class MainCharacter extends ADrawablePerson {
 
     private void shoot () {
         final Vector2 direction = getDirection();
-        BulletEntity bullet = new BulletEntity(pos, direction);
-        bullet.draw(batch);
+        EntitySystem entitySystem = EntitySystem.getInstance();
+        BulletEntity entity = entitySystem.createEntity(BulletEntity.class);
+        Vector2 vec2 = new Vector2(pos);
+        entity.setPos(vec2);
+        entity.setDirection(direction);
+        entity.setRotation(getAngle());
     }
 
     public void update () {

@@ -2,7 +2,9 @@ package com.art.shooter;
 
 import com.art.shooter.chars.ADrawablePerson;
 import com.art.shooter.chars.MainCharacter;
+import com.art.shooter.entities.EntitySystem;
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -23,9 +25,12 @@ public class ShooterGame extends ApplicationAdapter {
 
 	@Override
 	public void render () {
-		ScreenUtils.clear(1, 1, 1, 0.4f);
+		ScreenUtils.clear(1, 1, 1, 1);
 		batch.begin();
+		float deltaTime = Gdx.graphics.getDeltaTime();
 		mainCharacter.draw(batch);
+		EntitySystem instance = EntitySystem.getInstance();
+		instance.updateEntities(batch, deltaTime);
 		batch.end();
 	}
 	

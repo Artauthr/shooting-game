@@ -3,55 +3,64 @@ package com.art.shooter.entities;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Pool;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.Value;
 
-public class BulletEntity implements Pool.Poolable {
-    private Sprite bulletSprite;
-    private float speed = 200f;
-    private Vector2 targetPos;
-    private Vector2 direction;
+public class BulletEntity extends ASimpleEntity {
+    private Image image;
+    @Setter
+    private float rotation;
+    @Setter
     private Vector2 pos;
-    private boolean flaggedToRemove = false;
+    @Setter
+    private Vector2 direction;
+    private final float speed = 800f;
+    private final float lifeTime = 4f;
+    private float timer = 0f;
 
-    public BulletEntity(Vector2 sourcePos, Vector2 targetPos) {
-        this.pos = new Vector2(sourcePos);
-        this.direction = new Vector2(targetPos).sub(sourcePos).nor();
-
+    public BulletEntity () {
         Texture bullet = new Texture("bullet.png");
-        this.bulletSprite = new Sprite(bullet);
+        image = new Image(bullet);
+        image.setSize(10, 100);
+    }
+
+
+    @Override
+    protected void create() {
 
     }
 
-    public void setPos (float x, float y) {
-        this.pos.x = x;
-        this.pos.y = y;
+    @Override
+    protected void draw (Batch batch, float delta) {
+        update(delta);
+        image.setPosition(pos.x, pos.y);
+        image.setRotation(rotation);
+        image.draw(batch, delta);
     }
 
-    private void update () {
+    @Override
+    protected void update(float delta) {
         float deltaTime = Gdx.graphics.getDeltaTime();
-        Vector2 velocity = new Vector2(direction).scl(speed * deltaTime);
-        pos.add(velocity);
-    }
-
-    public void draw (Batch batch) {
-        update();
-        bulletSprite.setPosition(pos.x, pos.y);
-        bulletSprite.draw(batch);
-    }
-
-    public boolean checkOutOfBounds () {
-        if (this.pos.x > Gdx.graphics.getWidth() || this.pos.x < 0) {
-            flaggedToRemove = true;
+        timer += deltaTime;
+        if (timer > lifeTime) {
+            remove();
         }
-        // TODO: 8/31/2023 later
-        return false;
+        pos.x += direction.x * speed * deltaTime;
+        pos.y += direction.y * speed * deltaTime;
+    }
+
+    @Override
+    protected void remove() {
+        flaggedToRemove = true;
     }
 
     @Override
     public void reset() {
-        pos.setZero();
-        targetPos.setZero();
+        timer = 0f;
+        flaggedToRemove = false;
     }
 }
