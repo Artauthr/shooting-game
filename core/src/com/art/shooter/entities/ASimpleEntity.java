@@ -3,9 +3,11 @@ package com.art.shooter.entities;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.utils.Pool;
+import lombok.Setter;
 
 public abstract class ASimpleEntity implements Pool.Poolable {
-    boolean flaggedToRemove;
+    @Setter
+    private boolean flaggedToRemove;
     protected abstract void update(float delta);
     protected abstract void remove();
     protected abstract void create();

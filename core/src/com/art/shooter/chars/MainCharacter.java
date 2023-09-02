@@ -15,7 +15,6 @@ import com.badlogic.gdx.utils.Pools;
 public class MainCharacter extends ADrawablePerson {
     private float velX;
     private float velY;
-    private Sprite characterSprite;
     private final float SPEED = 120f;
     private Vector2 direction;
     private Batch batch;
@@ -25,6 +24,7 @@ public class MainCharacter extends ADrawablePerson {
         direction = new Vector2();
         velX = SPEED;
         velY = SPEED;
+
         Texture img = new Texture("shooter.png");
         characterSprite = new Sprite(img);
         characterSprite.setScale(3f);
@@ -59,7 +59,7 @@ public class MainCharacter extends ADrawablePerson {
         entity.setRotation(getAngle());
     }
 
-    public void update () {
+    public void update (float delta) {
         lookAtCursor();
         handleInput();
     }
@@ -82,18 +82,18 @@ public class MainCharacter extends ADrawablePerson {
         }
     }
 
+    @Override
+    public void remove() {
+        isFlaggedToRemove = true;
+    }
 
-    public void draw (Batch batch) {
+    public void draw (Batch batch, float delta) {
         if (this.batch == null) {
             this.batch = batch;
         }
-        update();
+        update(delta);
         characterSprite.setPosition(pos.x, pos.y);
         characterSprite.draw(batch);
-    }
-
-    public Vector2 getPosition () {
-        return this.pos;
     }
 
 }

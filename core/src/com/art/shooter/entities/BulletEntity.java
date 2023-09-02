@@ -3,15 +3,12 @@ package com.art.shooter.entities;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import lombok.Getter;
 import lombok.Setter;
-import lombok.Value;
 
 public class BulletEntity extends ASimpleEntity {
-    private Image image;
+    private Sprite bulletSprite;
     @Setter
     private float rotation;
     @Setter
@@ -24,8 +21,8 @@ public class BulletEntity extends ASimpleEntity {
 
     public BulletEntity () {
         Texture bullet = new Texture("bullet.png");
-        image = new Image(bullet);
-        image.setSize(10, 100);
+        bulletSprite  = new Sprite(bullet);
+        bulletSprite.setSize(2, 30);
     }
 
 
@@ -37,9 +34,9 @@ public class BulletEntity extends ASimpleEntity {
     @Override
     protected void draw (Batch batch, float delta) {
         update(delta);
-        image.setPosition(pos.x, pos.y);
-        image.setRotation(rotation);
-        image.draw(batch, delta);
+        bulletSprite.setPosition(pos.x, pos.y);
+        bulletSprite.setRotation(rotation);
+        bulletSprite.draw(batch);
     }
 
     @Override
@@ -55,12 +52,12 @@ public class BulletEntity extends ASimpleEntity {
 
     @Override
     protected void remove() {
-        flaggedToRemove = true;
+        setFlaggedToRemove(true);
     }
 
     @Override
     public void reset() {
         timer = 0f;
-        flaggedToRemove = false;
+        setFlaggedToRemove(false);
     }
 }
