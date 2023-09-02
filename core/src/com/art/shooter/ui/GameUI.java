@@ -1,21 +1,19 @@
-package com.art.shooter.utils;
+package com.art.shooter.ui;
 
+import com.art.shooter.utils.MiscUtils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-public class UI {
+public class GameUI {
     private Stage stage;
     private Table rootUI;
-    private static UI instance;
+    private static GameUI instance;
 
-    private UI (Viewport viewport, Batch batch) {
+    public GameUI(Viewport viewport, Batch batch) {
         stage = new Stage(viewport, batch);
 
         rootUI = new Table();

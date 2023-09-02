@@ -5,6 +5,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class MiscUtils {
     public static Viewport UIViewPort;
+    public static Viewport mainViewport;
 
     public static float getDistanceBetweenTwoVectors (Vector2 v1, Vector2 v2) {
         if (v1 == null || v2 == null) {

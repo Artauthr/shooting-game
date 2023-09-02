@@ -1,6 +1,7 @@
 package com.art.shooter.entities;
 
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
+import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pools;
 
@@ -46,7 +47,5 @@ public class EntitySystem {
         }
         entities.clear();
     }
-
-
 
 }
