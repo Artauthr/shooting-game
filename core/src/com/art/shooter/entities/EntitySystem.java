@@ -3,11 +3,13 @@ package com.art.shooter.entities;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Pools;
 
-public class EntitySystem {
+public class EntitySystem implements Disposable {
     private static EntitySystem instance;
     private Array<ASimpleEntity> entities = new Array<>();
+    private Array<ASimpleEntity> toDispose = new Array<>();
 
     private EntitySystem() {
 
@@ -24,6 +26,7 @@ public class EntitySystem {
         T entity = Pools.obtain(clazz);
         entity.create();
         entities.add(entity);
+        toDispose.add(entity);
         return entity;
     }
 
@@ -48,4 +51,10 @@ public class EntitySystem {
         entities.clear();
     }
 
+    @Override
+    public void dispose() {
+        for (ASimpleEntity entity : toDispose) {
+            entity.dispose();
+        }
+    }
 }

@@ -1,6 +1,6 @@
 package com.art.shooter.ui;
 
-import com.art.shooter.utils.MiscUtils;
+import com.art.shooter.utils.Utils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -20,7 +20,7 @@ public class GameUI {
         rootUI.setFillParent(true);
         rootUI.setTouchable(Touchable.enabled);
 
-        MiscUtils.UIViewPort = stage.getViewport();
+        Utils.UIViewPort = stage.getViewport();
     }
 
 

@@ -1,9 +1,10 @@
 package com.art.shooter.chars;
 
-import com.art.shooter.entities.ASimpleEntity;
 import com.art.shooter.entities.BulletEntity;
 import com.art.shooter.entities.EntitySystem;
-import com.art.shooter.utils.MiscUtils;
+import com.art.shooter.utils.CollisionDetector;
+import com.art.shooter.utils.Ray2D;
+import com.art.shooter.utils.Utils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Camera;
@@ -21,6 +22,7 @@ public class MainCharacter extends ADrawablePerson {
     private final float SPEED = 120f;
     private Vector2 direction;
     private Batch batch;
+    private Ray2D tmpRay;
 
     public MainCharacter() {
         pos = new Vector2();
@@ -32,6 +34,8 @@ public class MainCharacter extends ADrawablePerson {
         characterSprite = new Sprite(img);
         characterSprite.setScale(3f);
         characterSprite.setOriginCenter();
+
+        tmpRay =
     }
 
     private float getAngle () {
@@ -40,8 +44,8 @@ public class MainCharacter extends ADrawablePerson {
 
         Vector3 vec3 = new Vector3(x, y, 0);
 
-        // Get the camera from the main viewport and unproject the coordinates
-        Camera camera = MiscUtils.mainViewport.getCamera();
+        // get the camera from the main viewport and unproject the coordinates
+        Camera camera = Utils.mainViewport.getCamera();
         camera.unproject(vec3);
 
         float angle = (float) Math.atan2(vec3.y - pos.y, vec3.x - pos.x);
@@ -52,12 +56,12 @@ public class MainCharacter extends ADrawablePerson {
 
     private Vector2 getDirection () {
         Vector3 cursorPos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
-        Camera camera = MiscUtils.mainViewport.getCamera();
+        Camera camera = Utils.mainViewport.getCamera();
         camera.unproject(cursorPos);
 
         Vector2 direction = new Vector2(cursorPos.x - pos.x, cursorPos.y - pos.y);
 
-        direction.nor();  // Normalize the vector
+        direction.nor();  // normalize the vector
         return direction;
     }
 
@@ -73,6 +77,9 @@ public class MainCharacter extends ADrawablePerson {
         entity.setPos(vec2);
         entity.setDirection(direction);
         entity.setRotation(getAngle());
+        tmpRay.set
+
+        if (CollisionDetector.rayIntersectsRectangle(tmp))
     }
 
     public void update (float delta) {
@@ -112,4 +119,8 @@ public class MainCharacter extends ADrawablePerson {
         characterSprite.draw(batch);
     }
 
+    @Override
+    public void dispose() {
+        characterSprite.getTexture().dispose();
+    }
 }

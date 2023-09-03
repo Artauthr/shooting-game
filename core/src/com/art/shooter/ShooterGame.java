@@ -1,16 +1,24 @@
 package com.art.shooter;
 
+import com.art.shooter.chars.ADrawablePerson;
+import com.art.shooter.chars.CommonShooterEnemy;
 import com.art.shooter.chars.MainCharacter;
 import com.art.shooter.entities.EntitySystem;
 import com.art.shooter.logic.CharacterManager;
 import com.art.shooter.logic.CustomInputProcessor;
 import com.art.shooter.ui.ColorLibrary;
 import com.art.shooter.ui.GameUI;
-import com.art.shooter.utils.MiscUtils;
+import com.art.shooter.utils.Utils;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -21,13 +29,16 @@ public class ShooterGame extends ApplicationAdapter {
 	EntitySystem entitySystem;
 	CharacterManager charManager;
 	Viewport mainViewPort;
+	ShapeRenderer shapeRenderer;
 	float tmpTimer = 5f;
+	int enemyCount = 1;
+	int enemyCounter = 0;
 	GameUI gameUI;
 	
 	@Override
 	public void create () {
 		batch = new PolygonSpriteBatch();
-
+		shapeRenderer = new ShapeRenderer();
 
 		entitySystem = EntitySystem.getInstance();
 		charManager = CharacterManager.getInstance();
@@ -35,9 +46,8 @@ public class ShooterGame extends ApplicationAdapter {
 
 		//viewport and camera stuff
 		mainViewPort = new ExtendViewport(800, 800);
-		mainViewPort.getCamera().position.set(800, 400, 0);
 		mainViewPort.getCamera().position.set(charManager.getMainCharacter().getPos().x, charManager.getMainCharacter().getPos().y, 0);
-		MiscUtils.mainViewport = mainViewPort;
+		Utils.mainViewport = mainViewPort;
 
 		Gdx.input.setInputProcessor(new CustomInputProcessor());
 		gameUI = new GameUI(new ScreenViewport(), batch);
@@ -57,24 +67,53 @@ public class ShooterGame extends ApplicationAdapter {
 
 		batch.begin();
 //		gameUI.act();
-		if (tmpTimer > 5f) {
+		if (tmpTimer > 5f && enemyCounter < enemyCount)  {
 			charManager.spawnEnemyAtRandom();
 			tmpTimer = 0f;
+			enemyCounter++;
 		}
 
 		charManager.updateCharacters(batch, deltaTime);
 		entitySystem.updateEntities(batch, deltaTime);
 		batch.end();
 
+
+		// SHAPE RENDERER ONLY FOR DEBUG
+		shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
+		shapeRenderer.begin(ShapeRenderer.ShapeType.Line); // Line type for wireframe
+		shapeRenderer.setColor(Color.RED); // Set the color, for example to red
+
+		// Draw each bounding box; assuming `boundingBox` is your Rectangle object
+		if (charManager.getCharacters().size > 2) {
+			Array<ADrawablePerson> characters = charManager.getCharacters();
+			CommonShooterEnemy enemy = (CommonShooterEnemy) characters.get(1);
+			Rectangle bBox = enemy.getBoundingBox();
+			shapeRenderer.rect(bBox.x, bBox.y, bBox.width, bBox.height);
+		}
+
+		if (charManager.getCharacters().size > 2) {
+			if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
+				ADrawablePerson e = charManager.getCharacters().get(1);
+				float rotation = e.getCharacterSprite().getRotation();
+				System.out.println("rotation = " + rotation);
+				{
+
+				}
+			}
+		}
+
+		shapeRenderer.end();
+
 	}
 
 	
 	@Override
 	public void dispose () {
+		// TODO: 9/3/2023 need to dispose all textures
 		batch.dispose();
+		shapeRenderer.dispose();
+		entitySystem.dispose();
 	}
-
-	// OVERRIDES
 
 	@Override
 	public void resize(int width, int height) {

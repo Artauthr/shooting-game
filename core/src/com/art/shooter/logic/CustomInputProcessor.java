@@ -1,8 +1,7 @@
 package com.art.shooter.logic;
 
-import com.art.shooter.utils.MiscUtils;
+import com.art.shooter.utils.Utils;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
 public class CustomInputProcessor implements InputProcessor {
@@ -48,7 +47,7 @@ public class CustomInputProcessor implements InputProcessor {
 
     @Override
     public boolean scrolled(float amountX, float amountY) {
-        OrthographicCamera camera = (OrthographicCamera) MiscUtils.mainViewport.getCamera();
+        OrthographicCamera camera = (OrthographicCamera) Utils.mainViewport.getCamera();
         camera.zoom += 0.02 * amountY;
         return false;
     }

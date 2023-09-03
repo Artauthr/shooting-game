@@ -9,16 +9,18 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Pools;
 import lombok.Getter;
 
-public class CharacterManager {
+public class CharacterManager implements Disposable {
     /*this class manages the main player and enemies/NPC-s
     and interactions between them
     */
     private static CharacterManager instance;
     @Getter
     private MainCharacter mainCharacter; //there should be only 1 mainChar
+    @Getter
     private Array<ADrawablePerson> characters;
 
     private CharacterManager () {
@@ -71,7 +73,8 @@ public class CharacterManager {
         spawnEnemy(randomX, randomY);
     }
 
+    @Override
+    public void dispose() {
 
-
-
+    }
 }

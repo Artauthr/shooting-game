@@ -9,6 +9,7 @@ import lombok.Setter;
 public abstract class ADrawablePerson {
     protected float hp;
     protected float damage;
+    @Getter
     protected Sprite characterSprite;
     @Getter@Setter
     protected Vector2 pos;
@@ -18,4 +19,5 @@ public abstract class ADrawablePerson {
     public abstract void update(float delta);
     public abstract void draw(Batch batch, float delta);
     public abstract void remove();
+    public abstract void dispose();
 }

@@ -3,17 +3,22 @@ package com.art.shooter.chars;
 import com.art.shooter.entities.BulletEntity;
 import com.art.shooter.entities.EntitySystem;
 import com.art.shooter.logic.CharacterManager;
-import com.art.shooter.utils.MiscUtils;
+import com.art.shooter.utils.Utils;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import lombok.Getter;
 
 public class CommonShooterEnemy extends AEnemy {
     private float shootCooldownTimer;
+    @Getter
+    private Rectangle boundingBox;
     private final float speed = 100f;
     private final float optimalDistance = 120f; //desired distance from player
+    private final float bBoxMul = 1.2f;
 
     public CommonShooterEnemy() {
         Texture img = new Texture("enemy.png");
@@ -23,6 +28,7 @@ public class CommonShooterEnemy extends AEnemy {
 
         hp = 100;
         damage = 10;
+        this.boundingBox = new Rectangle();
     }
 
     private void simulate (float delta) {
@@ -34,7 +40,7 @@ public class CommonShooterEnemy extends AEnemy {
 
     private void move (float delta) {
         MainCharacter mainCharacter = CharacterManager.getInstance().getMainCharacter();
-        float distance = MiscUtils.getDistanceBetweenTwoVectors(mainCharacter.getPos(), this.pos);
+        float distance = Utils.getDistanceBetweenTwoVectors(mainCharacter.getPos(), this.pos);
         Vector2 direction = getDirection();
 
         if (distance > optimalDistance) {
@@ -97,9 +103,16 @@ public class CommonShooterEnemy extends AEnemy {
     @Override
     public void draw(Batch batch, float delta) {
         characterSprite.setPosition(pos.x, pos.y);
+        float width = characterSprite.getWidth();
+        float height = characterSprite.getHeight();
+        float x = characterSprite.getX();
+        float y = characterSprite.getY();
+
+        boundingBox.set(x, y, width * bBoxMul, height * bBoxMul);
         characterSprite.draw(batch);
         simulate(delta);
     }
+
 
     @Override
     public void remove() {
@@ -111,5 +124,10 @@ public class CommonShooterEnemy extends AEnemy {
         hp = 100f;
         characterSprite.setRotation(0);
         shootCooldownTimer = 0;
+    }
+
+    @Override
+    public void dispose() {
+        characterSprite.getTexture().dispose();
     }
 }
