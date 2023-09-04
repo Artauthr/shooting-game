@@ -23,7 +23,11 @@ public class BulletEntity extends ASimpleEntity {
     public BulletEntity () {
         Texture bullet = new Texture("bullet.png");
         bulletSprite  = new Sprite(bullet);
-        bulletSprite.setSize(2, 30);
+        bulletSprite.setSize(2, 7);
+
+        final float originX = bulletSprite.getWidth() / 2.0f;
+        final float originY = 0;
+        bulletSprite.setOrigin(originX, originY);
     }
 
 

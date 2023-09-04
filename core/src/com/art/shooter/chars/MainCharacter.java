@@ -8,9 +8,11 @@ import com.art.shooter.utils.Utils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -23,19 +25,27 @@ public class MainCharacter extends ADrawablePerson {
     private Vector2 direction;
     private Batch batch;
     private Ray2D tmpRay;
+    private final Vector2 muzzleOffset;
+
+    private ShapeRenderer shapeRenderer;
 
     public MainCharacter() {
         pos = new Vector2();
         direction = new Vector2();
+        muzzleOffset = new Vector2();
+
         velX = SPEED;
         velY = SPEED;
 
         Texture img = new Texture("shooter.png");
         characterSprite = new Sprite(img);
         characterSprite.setScale(3f);
-        characterSprite.setOriginCenter();
 
-        tmpRay =
+        final float originX = characterSprite.getWidth() / 2.0f;
+        final float originY = characterSprite.getHeight() / 2.0f - 4;
+        characterSprite.setOrigin(originX, originY);
+
+        shapeRenderer = new ShapeRenderer();
     }
 
     private float getAngle () {
@@ -69,17 +79,22 @@ public class MainCharacter extends ADrawablePerson {
         characterSprite.setRotation(getAngle());
     }
 
-    private void shoot () {
+    private void shoot() {
         final Vector2 direction = getDirection();
         EntitySystem entitySystem = EntitySystem.getInstance();
         BulletEntity entity = entitySystem.createEntity(BulletEntity.class);
-        Vector2 vec2 = new Vector2(pos);
-        entity.setPos(vec2);
-        entity.setDirection(direction);
-        entity.setRotation(getAngle());
-        tmpRay.set
 
-        if (CollisionDetector.rayIntersectsRectangle(tmp))
+        final float angle = getAngle();
+
+        muzzleOffset.set(4, 30);
+        muzzleOffset.rotateDeg(angle);
+        final float muzzleX = pos.x + characterSprite.getOriginX() + muzzleOffset.x;
+        final float muzzleY = pos.y + characterSprite.getOriginY() + muzzleOffset.y;
+
+        final Vector2 bulletPos = new Vector2(muzzleX, muzzleY);
+        entity.setPos(bulletPos);
+        entity.setDirection(direction);
+        entity.setRotation(angle);
     }
 
     public void update (float delta) {
@@ -117,10 +132,37 @@ public class MainCharacter extends ADrawablePerson {
         update(delta);
         characterSprite.setPosition(pos.x, pos.y);
         characterSprite.draw(batch);
+
+        // Draw origin as a debug point
+        batch.end(); // End the batch to switch to immediate mode rendering
+        shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix()); // Set projection matrix
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.RED);
+        final float originX = pos.x + characterSprite.getOriginX();
+        final float originY = pos.y + characterSprite.getOriginY();
+        shapeRenderer.circle(originX, originY, 1); // Increase the circle size for better visibility
+        shapeRenderer.end();
+        batch.begin(); // Begin the batch again to continue rendering other objects
+
+
+        // Draw origin as a debug point
+        batch.end(); // End the batch to switch to immediate mode rendering
+        shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix()); // Set projection matrix
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.WHITE);
+        muzzleOffset.set(4, 30);
+        muzzleOffset.rotateDeg(getAngle());
+        final float muzzleX = pos.x + characterSprite.getOriginX() + muzzleOffset.x;
+        final float muzzleY = pos.y + characterSprite.getOriginY() + muzzleOffset.y;
+
+        shapeRenderer.circle(muzzleX, muzzleY, 1); // Increase the circle size for better visibility
+        shapeRenderer.end();
+        batch.begin(); // Begin the batch again to continue rendering other objects
     }
 
     @Override
     public void dispose() {
         characterSprite.getTexture().dispose();
+        shapeRenderer.dispose();
     }
 }
