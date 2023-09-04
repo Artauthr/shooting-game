@@ -100,27 +100,27 @@ public class MainCharacter extends ADrawablePerson {
 
     public void update (float delta) {
         lookAtCursor();
-        handleInput();
+        handleInput(delta);
     }
 
-    public void handleInput () {
+    public void handleInput (float delta) {
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            pos.y += velY * Gdx.graphics.getDeltaTime();
+            pos.y += velY * delta;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            pos.y -= velY * Gdx.graphics.getDeltaTime();
+            pos.y -= velY * delta;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            pos.x += velX * Gdx.graphics.getDeltaTime();
+            pos.x += velX * delta;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            pos.x -= velX * Gdx.graphics.getDeltaTime();
+            pos.x -= velX * delta;
         }
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
             shoot();
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-            dash(getDirection(), Gdx.graphics.getDeltaTime());
+            dash(getDirection(), delta);
         }
     }
 
@@ -135,11 +135,10 @@ public class MainCharacter extends ADrawablePerson {
         isFlaggedToRemove = true;
     }
 
-    public void draw (Batch batch, float delta) {
+    public void draw (Batch batch) {
         if (this.batch == null) {
             this.batch = batch;
         }
-        update(delta);
         characterSprite.setPosition(pos.x, pos.y);
         characterSprite.draw(batch);
 

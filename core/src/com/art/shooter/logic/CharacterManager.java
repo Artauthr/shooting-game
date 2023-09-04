@@ -6,6 +6,7 @@ import com.art.shooter.chars.CommonShooterEnemy;
 import com.art.shooter.chars.MainCharacter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -34,7 +35,7 @@ public class CharacterManager implements Disposable {
         return instance;
     }
 
-    public void updateCharacters (Batch batch, float delta) {
+    public void updateCharacters (float delta) {
         Array.ArrayIterator<ADrawablePerson> iterator = characters.iterator();
         while (iterator.hasNext()) {
             ADrawablePerson next = iterator.next();
@@ -44,7 +45,13 @@ public class CharacterManager implements Disposable {
             }
         }
         for (ADrawablePerson character : characters) {
-            character.draw(batch, delta);
+            character.update(delta);
+        }
+    }
+
+    public void drawCharacters (PolygonSpriteBatch batch) {
+        for (ADrawablePerson character : characters) {
+            character.draw(batch);
         }
     }
 

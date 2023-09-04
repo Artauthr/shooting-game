@@ -37,8 +37,7 @@ public class BulletEntity extends ASimpleEntity {
     }
 
     @Override
-    protected void draw (Batch batch, float delta) {
-        update(delta);
+    protected void draw (Batch batch) {
         bulletSprite.setPosition(pos.x, pos.y);
         bulletSprite.setRotation(rotation);
         bulletSprite.draw(batch);
@@ -46,13 +45,12 @@ public class BulletEntity extends ASimpleEntity {
 
     @Override
     protected void update(float delta) {
-        float deltaTime = Gdx.graphics.getDeltaTime();
-        timer += deltaTime;
+        timer += delta;
         if (timer > lifeTime) {
             remove();
         }
-        pos.x += direction.x * speed * deltaTime;
-        pos.y += direction.y * speed * deltaTime;
+        pos.x += direction.x * speed * delta;
+        pos.y += direction.y * speed * delta;
     }
 
     @Override

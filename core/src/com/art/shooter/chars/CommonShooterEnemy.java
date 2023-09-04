@@ -104,7 +104,7 @@ public class CommonShooterEnemy extends AEnemy {
     }
 
     @Override
-    public void draw(Batch batch, float delta) {
+    public void draw(Batch batch) {
         characterSprite.setPosition(pos.x, pos.y);
         float width = characterSprite.getWidth();
         float height = characterSprite.getHeight();
@@ -113,7 +113,6 @@ public class CommonShooterEnemy extends AEnemy {
 
         boundingBox.set(x, y, width * bBoxMul, height * bBoxMul);
         characterSprite.draw(batch);
-        simulate(delta);
     }
 
 

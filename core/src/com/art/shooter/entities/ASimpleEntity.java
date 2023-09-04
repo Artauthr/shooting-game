@@ -11,7 +11,7 @@ public abstract class ASimpleEntity implements Pool.Poolable {
     protected abstract void update(float delta);
     protected abstract void remove();
     protected abstract void create();
-    protected abstract void draw(Batch batch, float delta);
+    protected abstract void draw(Batch batch);
     protected abstract void dispose();
 
     public boolean isFlaggedToRemove () {

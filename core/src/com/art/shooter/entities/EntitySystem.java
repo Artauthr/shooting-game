@@ -30,7 +30,7 @@ public class EntitySystem implements Disposable {
         return entity;
     }
 
-    public void updateEntities (PolygonSpriteBatch batch, float delta) {
+    public void updateEntities (float delta) {
         Array.ArrayIterator<ASimpleEntity> iterator = entities.iterator();
         while (iterator.hasNext()) {
             ASimpleEntity next = iterator.next();
@@ -39,8 +39,15 @@ public class EntitySystem implements Disposable {
                 iterator.remove();
             }
         }
+
         for (ASimpleEntity entity : entities) {
-            entity.draw(batch, delta);
+            entity.update(delta);
+        }
+    }
+
+    public void drawEntities (PolygonSpriteBatch batch) {
+        for (ASimpleEntity entity : entities) {
+            entity.draw(batch);
         }
     }
 

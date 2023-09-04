@@ -8,7 +8,7 @@ public class GameLogic {
     private boolean paused = false;
 
     private static GameLogic instance;
-    public GameLogic () {
+    private GameLogic () {
 
     }
 

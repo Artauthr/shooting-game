@@ -17,7 +17,7 @@ public abstract class ADrawablePerson {
     @Getter
     protected boolean isFlaggedToRemove;
     public abstract void update(float delta);
-    public abstract void draw(Batch batch, float delta);
+    public abstract void draw(Batch batch);
     public abstract void remove();
     public abstract void dispose();
 }

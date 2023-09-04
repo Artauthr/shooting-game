@@ -45,7 +45,7 @@ public class ShooterGame extends ApplicationAdapter {
 		entitySystem = EntitySystem.getInstance();
 		charManager = CharacterManager.getInstance();
 		charManager.createCharacter(MainCharacter.class);
-		gameLogic = new GameLogic();
+		gameLogic = GameLogic.getInstance();
 
 		//viewport and camera stuff
 		mainViewPort = new ExtendViewport(800, 800);
@@ -69,9 +69,11 @@ public class ShooterGame extends ApplicationAdapter {
 //		mainViewPort.getCamera().position.set(charManager.getMainCharacter().getPos().x, charManager.getMainCharacter().getPos().y, 0);
 
 		batch.begin();
+		entitySystem.drawEntities(batch);
+		charManager.drawCharacters(batch);
 		if (!gameLogic.isPaused()) {
-			charManager.updateCharacters(batch, deltaTime);
-			entitySystem.updateEntities(batch, deltaTime);
+			charManager.updateCharacters(deltaTime);
+			entitySystem.updateEntities(deltaTime);
 		}
 
 //		gameUI.act();
