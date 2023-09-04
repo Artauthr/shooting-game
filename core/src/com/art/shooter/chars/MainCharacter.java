@@ -22,6 +22,7 @@ public class MainCharacter extends ADrawablePerson {
     private float velX;
     private float velY;
     private final float SPEED = 120f;
+    private final float DASH_DISTANCE = 800f;
     private Vector2 direction;
     private Batch batch;
     private Ray2D tmpRay;
@@ -118,6 +119,15 @@ public class MainCharacter extends ADrawablePerson {
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
             shoot();
         }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            dash(getDirection(), Gdx.graphics.getDeltaTime());
+        }
+    }
+
+    private void dash (Vector2 direction, float delta) {
+        pos.x += direction.x * DASH_DISTANCE * delta;
+        pos.y += direction.y * DASH_DISTANCE * delta;
+
     }
 
     @Override

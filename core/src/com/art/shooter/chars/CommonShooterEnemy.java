@@ -17,14 +17,17 @@ public class CommonShooterEnemy extends AEnemy {
     @Getter
     private Rectangle boundingBox;
     private final float speed = 100f;
-    private final float optimalDistance = 120f; //desired distance from player
+    private final float optimalDistance = 220f; //desired distance from player
     private final float bBoxMul = 1.2f;
 
     public CommonShooterEnemy() {
         Texture img = new Texture("enemy.png");
         characterSprite = new Sprite(img);
         characterSprite.setScale(3f);
-        characterSprite.setOriginCenter();
+
+        final float originX = characterSprite.getWidth() / 2.0f;
+        final float originY = characterSprite.getHeight() / 2.0f;
+        characterSprite.setOrigin(originX, originY);
 
         hp = 100;
         damage = 10;
@@ -105,8 +108,8 @@ public class CommonShooterEnemy extends AEnemy {
         characterSprite.setPosition(pos.x, pos.y);
         float width = characterSprite.getWidth();
         float height = characterSprite.getHeight();
-        float x = characterSprite.getX();
-        float y = characterSprite.getY();
+        float x = pos.x - characterSprite.getOriginX();
+        float y = pos.y - characterSprite.getOriginY();
 
         boundingBox.set(x, y, width * bBoxMul, height * bBoxMul);
         characterSprite.draw(batch);

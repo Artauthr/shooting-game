@@ -109,7 +109,6 @@ public class ShooterGame extends ApplicationAdapter {
 	
 	@Override
 	public void dispose () {
-		// TODO: 9/3/2023 need to dispose all textures
 		batch.dispose();
 		shapeRenderer.dispose();
 		entitySystem.dispose();
