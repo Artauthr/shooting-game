@@ -6,6 +6,7 @@ import com.art.shooter.chars.MainCharacter;
 import com.art.shooter.entities.EntitySystem;
 import com.art.shooter.logic.CharacterManager;
 import com.art.shooter.logic.CustomInputProcessor;
+import com.art.shooter.logic.GameLogic;
 import com.art.shooter.ui.ColorLibrary;
 import com.art.shooter.ui.GameUI;
 import com.art.shooter.utils.Utils;
@@ -34,6 +35,7 @@ public class ShooterGame extends ApplicationAdapter {
 	int enemyCount = 1;
 	int enemyCounter = 0;
 	GameUI gameUI;
+	GameLogic gameLogic;
 	
 	@Override
 	public void create () {
@@ -43,6 +45,7 @@ public class ShooterGame extends ApplicationAdapter {
 		entitySystem = EntitySystem.getInstance();
 		charManager = CharacterManager.getInstance();
 		charManager.createCharacter(MainCharacter.class);
+		gameLogic = new GameLogic();
 
 		//viewport and camera stuff
 		mainViewPort = new ExtendViewport(800, 800);
@@ -66,6 +69,11 @@ public class ShooterGame extends ApplicationAdapter {
 //		mainViewPort.getCamera().position.set(charManager.getMainCharacter().getPos().x, charManager.getMainCharacter().getPos().y, 0);
 
 		batch.begin();
+		if (!gameLogic.isPaused()) {
+			charManager.updateCharacters(batch, deltaTime);
+			entitySystem.updateEntities(batch, deltaTime);
+		}
+
 //		gameUI.act();
 		if (tmpTimer > 5f && enemyCounter < enemyCount)  {
 			charManager.spawnEnemyAtRandom();
@@ -73,8 +81,7 @@ public class ShooterGame extends ApplicationAdapter {
 			enemyCounter++;
 		}
 
-		charManager.updateCharacters(batch, deltaTime);
-		entitySystem.updateEntities(batch, deltaTime);
+
 		batch.end();
 
 

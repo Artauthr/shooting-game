@@ -1,7 +1,9 @@
 package com.art.shooter.logic;
 
+import com.art.shooter.ShooterGame;
 import com.art.shooter.utils.Utils;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
@@ -9,6 +11,15 @@ import com.badlogic.gdx.math.Vector3;
 public class CustomInputProcessor implements InputProcessor {
     @Override
     public boolean keyDown(int keycode) {
+        if (keycode == Input.Keys.ESCAPE) {
+            final GameLogic gameLogic = GameLogic.getInstance();
+
+            if (gameLogic.isPaused()) {
+                gameLogic.unPause();
+            } else {
+                gameLogic.pauseGame();
+            }
+        }
         return false;
     }
 
