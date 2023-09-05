@@ -106,12 +106,17 @@ public class CommonShooterEnemy extends AEnemy {
     @Override
     public void draw(Batch batch) {
         characterSprite.setPosition(pos.x, pos.y);
-        float width = characterSprite.getWidth();
-        float height = characterSprite.getHeight();
-        float x = pos.x - characterSprite.getOriginX();
-        float y = pos.y - characterSprite.getOriginY();
 
-        boundingBox.set(x, y, width * bBoxMul, height * bBoxMul);
+        // draw bounding box
+        float width = characterSprite.getWidth() * bBoxMul;
+        float height = characterSprite.getHeight() * bBoxMul;
+
+        float x = pos.x - characterSprite.getOriginX() + width / 2.0f;
+        float y = pos.y - characterSprite.getOriginY() + height / 2.0f;
+
+        boundingBox.set(x, y, width, height);
+
+        // draw character sprite
         characterSprite.draw(batch);
     }
 
