@@ -48,8 +48,10 @@ public class ShooterGame extends ApplicationAdapter {
 		gameLogic = GameLogic.getInstance();
 
 		//viewport and camera stuff
-		mainViewPort = new ExtendViewport(800, 800);
-		mainViewPort.getCamera().position.set(charManager.getMainCharacter().getPos().x, charManager.getMainCharacter().getPos().y, 0);
+		mainViewPort = new ExtendViewport(18, 10);
+		OrthographicCamera camera = (OrthographicCamera) mainViewPort.getCamera();
+		camera.position.set(charManager.getMainCharacter().getPos().x, charManager.getMainCharacter().getPos().y, 0);
+		camera.zoom = 15f;
 		Utils.mainViewport = mainViewPort;
 
 		Gdx.input.setInputProcessor(new CustomInputProcessor());

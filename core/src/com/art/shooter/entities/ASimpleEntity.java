@@ -1,11 +1,11 @@
 package com.art.shooter.entities;
 
+import com.art.shooter.logic.GameObject;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.utils.Pool;
 import lombok.Setter;
 
-public abstract class ASimpleEntity implements Pool.Poolable {
+public abstract class ASimpleEntity implements Pool.Poolable, GameObject {
     @Setter
     private boolean flaggedToRemove;
     protected abstract void update(float delta);
