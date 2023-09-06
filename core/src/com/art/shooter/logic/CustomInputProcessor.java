@@ -1,6 +1,7 @@
 package com.art.shooter.logic;
 
 import com.art.shooter.ShooterGame;
+import com.art.shooter.screenUtils.Grid;
 import com.art.shooter.utils.Utils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -86,6 +87,7 @@ public class CustomInputProcessor implements InputProcessor {
         // update the camera's zoom and position
         camera.zoom = newZoom;
         camera.position.add(deltaX, deltaY, 0);
+        Grid.getInstance().onCameraZoomChanged(newZoom);
 
         return false; // TODO: 04.09.23 why false tho?
     }

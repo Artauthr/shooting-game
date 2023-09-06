@@ -7,6 +7,7 @@ import com.art.shooter.entities.EntitySystem;
 import com.art.shooter.logic.CharacterManager;
 import com.art.shooter.logic.CustomInputProcessor;
 import com.art.shooter.logic.GameLogic;
+import com.art.shooter.screenUtils.Grid;
 import com.art.shooter.ui.ColorLibrary;
 import com.art.shooter.ui.GameUI;
 import com.art.shooter.utils.Utils;
@@ -36,6 +37,7 @@ public class ShooterGame extends ApplicationAdapter {
 	int enemyCounter = 0;
 	GameUI gameUI;
 	GameLogic gameLogic;
+	Grid grid;
 	
 	@Override
 	public void create () {
@@ -57,6 +59,9 @@ public class ShooterGame extends ApplicationAdapter {
 		Gdx.input.setInputProcessor(new CustomInputProcessor());
 		gameUI = new GameUI(new ScreenViewport(), batch);
 
+		int width = Gdx.graphics.getWidth();
+		int height = Gdx.graphics.getHeight();
+		grid = Grid.getInstance();
 	}
 
 	@Override
@@ -68,7 +73,6 @@ public class ShooterGame extends ApplicationAdapter {
 
 		mainViewPort.apply();
 		batch.setProjectionMatrix(mainViewPort.getCamera().combined);
-//		mainViewPort.getCamera().position.set(charManager.getMainCharacter().getPos().x, charManager.getMainCharacter().getPos().y, 0);
 
 		batch.begin();
 		entitySystem.drawEntities(batch);
@@ -87,33 +91,34 @@ public class ShooterGame extends ApplicationAdapter {
 
 
 		batch.end();
+		grid.draw(shapeRenderer);
 
 
-		// SHAPE RENDERER ONLY FOR DEBUG
-		shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
-		shapeRenderer.begin(ShapeRenderer.ShapeType.Line); // Line type for wireframe
-		shapeRenderer.setColor(Color.RED); // Set the color, for example to red
+//		// SHAPE RENDERER ONLY FOR DEBUG
+//		shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
+//		shapeRenderer.begin(ShapeRenderer.ShapeType.Line); // Line type for wireframe
+//		shapeRenderer.setColor(Color.RED); // Set the color, for example to red
+//
+//		// Draw each bounding box; assuming `boundingBox` is your Rectangle object
+//		if (charManager.getCharacters().size > 2) {
+//			Array<ADrawablePerson> characters = charManager.getCharacters();
+//			CommonShooterEnemy enemy = (CommonShooterEnemy) characters.get(1);
+//			Rectangle bBox = enemy.getBoundingBox();
+//			shapeRenderer.rect(bBox.x, bBox.y, bBox.width, bBox.height);
+//		}
+//
+//		if (charManager.getCharacters().size > 2) {
+//			if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
+//				ADrawablePerson e = charManager.getCharacters().get(1);
+//				float rotation = e.getCharacterSprite().getRotation();
+//				System.out.println("rotation = " + rotation);
+//				{
+//
+//				}
+//			}
+//		}
 
-		// Draw each bounding box; assuming `boundingBox` is your Rectangle object
-		if (charManager.getCharacters().size > 2) {
-			Array<ADrawablePerson> characters = charManager.getCharacters();
-			CommonShooterEnemy enemy = (CommonShooterEnemy) characters.get(1);
-			Rectangle bBox = enemy.getBoundingBox();
-			shapeRenderer.rect(bBox.x, bBox.y, bBox.width, bBox.height);
-		}
-
-		if (charManager.getCharacters().size > 2) {
-			if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
-				ADrawablePerson e = charManager.getCharacters().get(1);
-				float rotation = e.getCharacterSprite().getRotation();
-				System.out.println("rotation = " + rotation);
-				{
-
-				}
-			}
-		}
-
-		shapeRenderer.end();
+//		shapeRenderer.end();
 
 	}
 
