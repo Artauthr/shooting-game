@@ -11,4 +11,12 @@ public class GridCell {
         gameObjects = new Array<>();
     }
 
+    public void add (GameObject gameObject) {
+        this.gameObjects.add(gameObject);
+    }
+
+    public void remove (GameObject gameObject) {
+        this.gameObjects.removeValue(gameObject, false);
+    }
+
 }

@@ -2,11 +2,9 @@ package com.art.shooter.entities;
 
 import com.art.shooter.utils.Utils;
 import com.art.shooter.utils.screenUtils.Grid;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
 import lombok.Getter;
 import lombok.Setter;
@@ -68,7 +66,7 @@ public class BulletEntity extends ASimpleEntity {
             System.out.println("bullet set to remove");
             return;
         }
-        grid.setEntityToCell(this);
+        grid.addEntityToCell(this);
     }
 
     @Override

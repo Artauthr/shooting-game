@@ -1,11 +1,18 @@
 package com.art.shooter.utils.screenUtils;
 
+import com.art.shooter.chars.ADrawablePerson;
 import com.art.shooter.logic.GameObject;
 import com.art.shooter.utils.Utils;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.OrderedSet;
+
+import java.util.HashSet;
 
 // the griddy
 public class Grid {
@@ -66,6 +73,24 @@ public class Grid {
         return getCellAt(vec2.x, vec2.y);
     }
 
+    public OrderedSet<GridCell> getCellsAt (Circle colliderCircle) {
+        OrderedSet<GridCell> cells = new OrderedSet<>();
+        GridCell centerCell = getCellAt(colliderCircle.x, colliderCircle.y);
+
+        GridCell cell1 = getCellAt(getCellPos(colliderCircle.x + colliderCircle.radius, colliderCircle.y));
+        GridCell cell2 = getCellAt(getCellPos(colliderCircle.x - colliderCircle.radius, colliderCircle.y));
+        GridCell cell3 = getCellAt(getCellPos(colliderCircle.x, colliderCircle.y + colliderCircle.radius));
+        GridCell cell4 = getCellAt(getCellPos(colliderCircle.x, colliderCircle.y - colliderCircle.radius));
+
+        cells.add(centerCell);
+        cells.add(cell1);
+        cells.add(cell2);
+        cells.add(cell3);
+        cells.add(cell4);
+
+        return cells;
+    }
+
     public void debug (ShapeRenderer shapeRenderer) {
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
@@ -86,10 +111,38 @@ public class Grid {
         Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 
+    public int getNumOfOccupiedCells () {
+        int count = 0;
+        for (GridCell[] cell : cells) {
+            for (GridCell gridCell : cell) {
+                if (gridCell.getGameObjects().size > 0) {
+                    count++;
+                }
+            }
+        }
+        System.out.println("Occupied Cells " + count);
+        return count;
+    }
 
-    public void setEntityToCell (GameObject gameObject) {
+
+    public void addEntityToCell (GameObject gameObject) {
         final Grid grid = Grid.getInstance();
         grid.getCellAt(gameObject.getPos()).getGameObjects().add(gameObject);
+    }
+
+    public void addEntityToCellV2 (GameObject gameObject) {
+        Circle colliderCircle = gameObject.getColliderCircle();
+        OrderedSet<GridCell> cellsToAdd = getCellsAt(colliderCircle);
+        for (GridCell gridCell : cellsToAdd) {
+            gridCell.add(gameObject);
+        }
+    }
+
+    public void removeEntityFromCellV2 (GameObject gameObject) {
+        OrderedSet<GridCell> cellsToRemoveFrom = getCellsAt(gameObject.getColliderCircle());
+        for (GridCell gridCell : cellsToRemoveFrom) {
+            gridCell.remove(gameObject);
+        }
     }
 
     public void removeEntityFromCell (GameObject gameObject) {

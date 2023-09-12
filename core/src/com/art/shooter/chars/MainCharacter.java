@@ -5,6 +5,7 @@ import com.art.shooter.entities.EntitySystem;
 
 import com.art.shooter.utils.Utils;
 import com.art.shooter.utils.screenUtils.Grid;
+import com.art.shooter.utils.screenUtils.GridCell;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Camera;
@@ -12,7 +13,6 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -26,8 +26,6 @@ public class MainCharacter extends ADrawablePerson {
     private Vector2 direction;
     private Batch batch;
     private final Vector2 muzzleOffset;
-
-    private ShapeRenderer shapeRenderer;
 
     public MainCharacter() {
         pos = new Vector2();
@@ -83,11 +81,11 @@ public class MainCharacter extends ADrawablePerson {
         final float xOffset = getDirection().x * 2f;
         final float yOffset = getDirection().y * 2f;
 
-        colliderCircle.setPosition(pos.x + 5f, pos.y + 5f);
+        colliderCircle.setPosition(pos.x + 9f, pos.y + 5f);
 
         if (timer > 2.5f) {
-            System.out.println("xOffset = " + xOffset);
-            System.out.println("yOffset = " + yOffset);
+            System.out.println("colliderCircle.x = " + colliderCircle.x);
+            System.out.println("colliderCircle.y = " + colliderCircle.y);
 //            System.out.println("direction.x = " + getDirection().x);
 //            System.out.println("direction.y = " + getDirection().y);
 //            System.out.println("angle = " + getAngle());
@@ -128,9 +126,9 @@ public class MainCharacter extends ADrawablePerson {
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
             if (pos.y + velY * delta < Utils.camera.viewportHeight) {
                 final Grid grid = Grid.getInstance();
-                grid.removeEntityFromCell(this);
+                grid.removeEntityFromCellV2(this);
                 pos.y += velY * delta;
-                grid.setEntityToCell(this);
+                grid.addEntityToCellV2(this);
             } else {
                 pos.y = Utils.camera.viewportHeight;
             }
@@ -138,9 +136,9 @@ public class MainCharacter extends ADrawablePerson {
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
             if (pos.y - velY * delta >= 0) {
                 final Grid grid = Grid.getInstance();
-                grid.removeEntityFromCell(this);
+                grid.removeEntityFromCellV2(this);
                 pos.y -= velY * delta;
-                grid.setEntityToCell(this);
+                grid.addEntityToCellV2(this);
             } else {
                 pos.y = 0;
             }
@@ -148,9 +146,9 @@ public class MainCharacter extends ADrawablePerson {
         if (Gdx.input.isKeyPressed(Input.Keys.D)) {
             if (pos.x + velX * delta < Utils.camera.viewportWidth) {
                 final Grid grid = Grid.getInstance();
-                grid.removeEntityFromCell(this);
+                grid.removeEntityFromCellV2(this);
                 pos.x += velX * delta;
-                grid.setEntityToCell(this);
+                grid.addEntityToCellV2(this);
             } else {
                 pos.x = Utils.camera.viewportWidth;
             }
@@ -158,9 +156,9 @@ public class MainCharacter extends ADrawablePerson {
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
             if (pos.x - velX * delta >= 0) {
                 final Grid grid = Grid.getInstance();
-                grid.removeEntityFromCell(this);
+                grid.removeEntityFromCellV2(this);
                 pos.x -= velX * delta;
-                grid.setEntityToCell(this);
+                grid.addEntityToCellV2(this);
             } else {
                 pos.x = 0;
             }
@@ -171,6 +169,11 @@ public class MainCharacter extends ADrawablePerson {
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             dash(getDirection(), delta);
         }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.V)) {
+            Grid instance = Grid.getInstance();
+            instance.getNumOfOccupiedCells();
+        }
+
 
     }
 
@@ -222,6 +225,5 @@ public class MainCharacter extends ADrawablePerson {
     @Override
     public void dispose() {
         characterSprite.getTexture().dispose();
-        shapeRenderer.dispose();
     }
 }

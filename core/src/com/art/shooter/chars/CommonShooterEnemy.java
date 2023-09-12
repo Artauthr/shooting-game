@@ -4,6 +4,7 @@ import com.art.shooter.entities.BulletEntity;
 import com.art.shooter.entities.EntitySystem;
 import com.art.shooter.logic.CharacterManager;
 import com.art.shooter.utils.Utils;
+import com.art.shooter.utils.screenUtils.Grid;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -48,10 +49,12 @@ public class CommonShooterEnemy extends AEnemy {
 
         if (distance > optimalDistance) {
             //get up close and personal
+            Grid.getInstance().removeEntityFromCell(this);
             pos.x += direction.x * speed * delta;
             pos.y += direction.y * speed * delta;
         } else {
             //create some distance
+            Grid.getInstance().removeEntityFromCell(this);
             pos.x -= direction.x * speed * delta;
             pos.y -= direction.y * speed * delta;
         }

@@ -45,8 +45,7 @@ public class ShooterGame extends ApplicationAdapter {
 		shapeRenderer.setAutoShapeType(true);
 
 		entitySystem = EntitySystem.getInstance();
-		charManager = CharacterManager.getInstance();
-		charManager.createCharacter(MainCharacter.class);
+
 		gameLogic = GameLogic.getInstance();
 
 		camera = new OrthographicCamera(1280,720);
@@ -61,6 +60,10 @@ public class ShooterGame extends ApplicationAdapter {
 
 		Gdx.input.setInputProcessor(new CustomInputProcessor());
 		gameUI = new GameUI(new ScreenViewport(), batch);
+
+		charManager = CharacterManager.getInstance();
+		charManager.createCharacter(MainCharacter.class);
+//		charManager.spawnEnemyAtRandom();
 	}
 
 	@Override
@@ -93,35 +96,6 @@ public class ShooterGame extends ApplicationAdapter {
 		debugRenderer.draw(shapeRenderer);
 
 		grid.debug(shapeRenderer);
-
-
-
-
-//		// SHAPE RENDERER ONLY FOR DEBUG
-//		shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
-//		shapeRenderer.begin(ShapeRenderer.ShapeType.Line); // Line type for wireframe
-//		shapeRenderer.setColor(Color.RED); // Set the color, for example to red
-//
-//		// Draw each bounding box; assuming `boundingBox` is your Rectangle object
-//		if (charManager.getCharacters().size > 2) {
-//			Array<ADrawablePerson> characters = charManager.getCharacters();
-//			CommonShooterEnemy enemy = (CommonShooterEnemy) characters.get(1);
-//			Rectangle bBox = enemy.getBoundingBox();
-//			shapeRenderer.rect(bBox.x, bBox.y, bBox.width, bBox.height);
-//		}
-//
-//		if (charManager.getCharacters().size > 2) {
-//			if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
-//				ADrawablePerson e = charManager.getCharacters().get(1);
-//				float rotation = e.getCharacterSprite().getRotation();
-//				System.out.println("rotation = " + rotation);
-//				{
-//
-//				}
-//			}
-//		}
-
-//		shapeRenderer.end();
 
 	}
 
