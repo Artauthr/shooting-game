@@ -1,7 +1,5 @@
 package com.art.shooter.logic;
 
-import com.art.shooter.ShooterGame;
-import com.art.shooter.screenUtils.Grid;
 import com.art.shooter.utils.Utils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -61,7 +59,7 @@ public class CustomInputProcessor implements InputProcessor {
 
     @Override
     public boolean scrolled(float amountX, float amountY) {
-        final OrthographicCamera camera = (OrthographicCamera) Utils.mainViewport.getCamera();
+        final OrthographicCamera camera = Utils.camera;
 
         // get the mouse position in world coordinates before adjusting the zoom
         final Vector3 mouseWorldCoords = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
@@ -72,8 +70,8 @@ public class CustomInputProcessor implements InputProcessor {
         float newZoom = camera.zoom + deltaZoom * amountY;
 
         // set minimum and maximum zoom levels
-        float minZoom = 10f; // TODO: 04.09.23 make static or a field variable
-        float maxZoom = 100; // TODO: 04.09.23 make static or a field variable
+        float minZoom = 5f; // TODO: 04.09.23 make static or a field variable
+        float maxZoom = 8f; // TODO: 04.09.23 make static or a field variable
         if (newZoom < minZoom) {
             newZoom = minZoom;
         } else if (newZoom > maxZoom) {
@@ -86,9 +84,8 @@ public class CustomInputProcessor implements InputProcessor {
 
         // update the camera's zoom and position
         camera.zoom = newZoom;
-        camera.position.add(deltaX, deltaY, 0);
-        Grid.getInstance().onCameraZoomChanged(newZoom);
-
-        return false; // TODO: 04.09.23 why false tho?
+//        camera.position.add(deltaX, deltaY, 0);
+        camera.update();
+        return true;
     }
 }

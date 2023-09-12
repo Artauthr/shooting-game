@@ -2,17 +2,19 @@ package com.art.shooter.chars;
 
 import com.art.shooter.entities.BulletEntity;
 import com.art.shooter.entities.EntitySystem;
-import com.art.shooter.utils.CollisionDetector;
+
 import com.art.shooter.utils.Ray2D;
 import com.art.shooter.utils.Utils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.Color;
+
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -25,7 +27,7 @@ public class MainCharacter extends ADrawablePerson {
     private final float DASH_DISTANCE = 800f;
     private Vector2 direction;
     private Batch batch;
-    private Ray2D tmpRay;
+    private Circle colliderCircle;
     private final Vector2 muzzleOffset;
 
     private ShapeRenderer shapeRenderer;
@@ -46,7 +48,8 @@ public class MainCharacter extends ADrawablePerson {
         final float originY = characterSprite.getHeight() / 2.0f - 4;
         characterSprite.setOrigin(originX, originY);
 
-        shapeRenderer = new ShapeRenderer();
+        colliderCircle = new Circle();
+//        shapeRenderer = new ShapeRenderer();
     }
 
     private float getAngle () {
@@ -56,7 +59,7 @@ public class MainCharacter extends ADrawablePerson {
         Vector3 vec3 = new Vector3(x, y, 0);
 
         // get the camera from the main viewport and unproject the coordinates
-        Camera camera = Utils.mainViewport.getCamera();
+        Camera camera = Utils.camera;
         camera.unproject(vec3);
 
         float angle = (float) Math.atan2(vec3.y - pos.y, vec3.x - pos.x);
@@ -67,7 +70,7 @@ public class MainCharacter extends ADrawablePerson {
 
     private Vector2 getDirection () {
         Vector3 cursorPos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
-        Camera camera = Utils.mainViewport.getCamera();
+        Camera camera = Utils.camera;
         camera.unproject(cursorPos);
 
         Vector2 direction = new Vector2(cursorPos.x - pos.x, cursorPos.y - pos.y);
@@ -122,12 +125,20 @@ public class MainCharacter extends ADrawablePerson {
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             dash(getDirection(), delta);
         }
+        checkForCollisions();
     }
 
     private void dash (Vector2 direction, float delta) {
         pos.x += direction.x * DASH_DISTANCE * delta;
         pos.y += direction.y * DASH_DISTANCE * delta;
 
+    }
+
+    private void checkForCollisions () {
+        OrthographicCamera camera = Utils.camera;
+        float viewportWidth = camera.viewportWidth;
+        float viewportHeight = camera.viewportHeight;
+        camera.unproject(p
     }
 
     @Override
@@ -139,34 +150,36 @@ public class MainCharacter extends ADrawablePerson {
         if (this.batch == null) {
             this.batch = batch;
         }
+        colliderCircle.setPosition(pos.x, pos.y);
+        colliderCircle.setRadius(characterSprite.getWidth() / 2f);
         characterSprite.setPosition(pos.x, pos.y);
         characterSprite.draw(batch);
 
-        // Draw origin as a debug point
-        batch.end(); // End the batch to switch to immediate mode rendering
-        shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix()); // Set projection matrix
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(Color.RED);
-        final float originX = pos.x + characterSprite.getOriginX();
-        final float originY = pos.y + characterSprite.getOriginY();
-        shapeRenderer.circle(originX, originY, 1); // Increase the circle size for better visibility
-        shapeRenderer.end();
-        batch.begin(); // Begin the batch again to continue rendering other objects
-
-
-        // Draw origin as a debug point
-        batch.end(); // End the batch to switch to immediate mode rendering
-        shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix()); // Set projection matrix
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(Color.WHITE);
-        muzzleOffset.set(4, 30);
-        muzzleOffset.rotateDeg(getAngle());
-        final float muzzleX = pos.x + characterSprite.getOriginX() + muzzleOffset.x;
-        final float muzzleY = pos.y + characterSprite.getOriginY() + muzzleOffset.y;
-
-        shapeRenderer.circle(muzzleX, muzzleY, 1); // Increase the circle size for better visibility
-        shapeRenderer.end();
-        batch.begin(); // Begin the batch again to continue rendering other objects
+//        // Draw origin as a debug point
+//        batch.end(); // End the batch to switch to immediate mode rendering
+//        shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix()); // Set projection matrix
+//        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+//        shapeRenderer.setColor(Color.RED);
+//        final float originX = pos.x + characterSprite.getOriginX();
+//        final float originY = pos.y + characterSprite.getOriginY();
+//        shapeRenderer.circle(originX, originY, 1); // Increase the circle size for better visibility
+//        shapeRenderer.end();
+//        batch.begin(); // Begin the batch again to continue rendering other objects
+//
+//
+//        // Draw origin as a debug point
+//        batch.end(); // End the batch to switch to immediate mode rendering
+//        shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix()); // Set projection matrix
+//        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+//        shapeRenderer.setColor(Color.WHITE);
+//        muzzleOffset.set(4, 30);
+//        muzzleOffset.rotateDeg(getAngle());
+//        final float muzzleX = pos.x + characterSprite.getOriginX() + muzzleOffset.x;
+//        final float muzzleY = pos.y + characterSprite.getOriginY() + muzzleOffset.y;
+//
+//        shapeRenderer.circle(muzzleX, muzzleY, 1); // Increase the circle size for better visibility
+//        shapeRenderer.end();
+//        batch.begin(); // Begin the batch again to continue rendering other objects
     }
 
     @Override

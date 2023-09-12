@@ -6,13 +6,14 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
+import lombok.Getter;
 import lombok.Setter;
 
 public class BulletEntity extends ASimpleEntity {
     private Sprite bulletSprite;
     @Setter
     private float rotation;
-    @Setter
+    @Getter @Setter
     private Vector2 pos;
     @Setter
     private Vector2 direction;

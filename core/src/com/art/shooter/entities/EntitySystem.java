@@ -5,9 +5,12 @@ import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Pools;
+import lombok.Getter;
 
 public class EntitySystem implements Disposable {
     private static EntitySystem instance;
+
+    @Getter
     private Array<ASimpleEntity> entities = new Array<>();
     private Array<ASimpleEntity> toDispose = new Array<>();
 
