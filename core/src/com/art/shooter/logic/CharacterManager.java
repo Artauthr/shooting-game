@@ -4,9 +4,14 @@ package com.art.shooter.logic;
 import com.art.shooter.chars.ADrawablePerson;
 import com.art.shooter.chars.CommonShooterEnemy;
 import com.art.shooter.chars.MainCharacter;
+import com.art.shooter.utils.Utils;
+import com.art.shooter.utils.screenUtils.Grid;
+import com.art.shooter.utils.screenUtils.GridCell;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -51,7 +56,10 @@ public class CharacterManager implements Disposable {
 
     public void drawCharacters (PolygonSpriteBatch batch) {
         for (ADrawablePerson character : characters) {
-            character.draw(batch);
+            final Sprite sprite = character.getCharacterSprite();
+            final Vector2 pos = character.getPos();
+            sprite.setPosition(pos.x, pos.y);
+            sprite.draw(batch);
         }
     }
 
@@ -66,22 +74,27 @@ public class CharacterManager implements Disposable {
 
     public void spawnEnemy (float x, float y) {
         CommonShooterEnemy enemy = createCharacter(CommonShooterEnemy.class);
-        enemy.setPos(new Vector2(x, y));
+        enemy.getPos().x = x;
+        enemy.getPos().y = y;
         characters.add(enemy);
     }
 
     public void spawnEnemyAtRandom () {
-        int width = Gdx.graphics.getWidth();
-        int height = Gdx.graphics.getHeight();
+        final float viewportWidth = Utils.camera.viewportWidth;
+        final float viewportHeight = Utils.camera.viewportHeight;
 
-        int randomX = MathUtils.random(20, width);
-        int randomY = MathUtils.random(20, height);
+        int randomX = (int) MathUtils.random(20, viewportWidth);
+        int randomY = (int) MathUtils.random(20, viewportHeight);
 
         spawnEnemy(randomX, randomY);
     }
 
+
+
     @Override
     public void dispose() {
-
+        for (ADrawablePerson character : characters) {
+            character.dispose();
+        }
     }
 }

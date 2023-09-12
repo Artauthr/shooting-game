@@ -3,13 +3,12 @@ package com.art.shooter.chars;
 import com.art.shooter.entities.BulletEntity;
 import com.art.shooter.entities.EntitySystem;
 
-import com.art.shooter.utils.Ray2D;
 import com.art.shooter.utils.Utils;
+import com.art.shooter.utils.screenUtils.Grid;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Camera;
 
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -18,16 +17,14 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.Pools;
 
 public class MainCharacter extends ADrawablePerson {
     private float velX;
     private float velY;
-    private final float SPEED = 120f;
+    private final float SPEED = 240f;
     private final float DASH_DISTANCE = 800f;
     private Vector2 direction;
     private Batch batch;
-    private Circle colliderCircle;
     private final Vector2 muzzleOffset;
 
     private ShapeRenderer shapeRenderer;
@@ -44,12 +41,11 @@ public class MainCharacter extends ADrawablePerson {
         characterSprite = new Sprite(img);
         characterSprite.setScale(3f);
 
-        final float originX = characterSprite.getWidth() / 2.0f;
-        final float originY = characterSprite.getHeight() / 2.0f - 4;
+        final float originX = characterSprite.getWidth() / 2.0f + 0.5f;
+        final float originY = characterSprite.getHeight() / 2.0f - 2;
         characterSprite.setOrigin(originX, originY);
 
         colliderCircle = new Circle();
-//        shapeRenderer = new ShapeRenderer();
     }
 
     private float getAngle () {
@@ -79,8 +75,25 @@ public class MainCharacter extends ADrawablePerson {
         return direction;
     }
 
-    private void lookAtCursor () {
+    private float timer = 4f;
+    private void lookAtCursor (float delta) {
+        timer += delta;
         characterSprite.setRotation(getAngle());
+        colliderCircle.setRadius(11.5f);
+        final float xOffset = getDirection().x * 2f;
+        final float yOffset = getDirection().y * 2f;
+
+        colliderCircle.setPosition(pos.x + 5f, pos.y + 5f);
+
+        if (timer > 2.5f) {
+            System.out.println("xOffset = " + xOffset);
+            System.out.println("yOffset = " + yOffset);
+//            System.out.println("direction.x = " + getDirection().x);
+//            System.out.println("direction.y = " + getDirection().y);
+//            System.out.println("angle = " + getAngle());
+            timer = 0f;
+        }
+
     }
 
     private void shoot() {
@@ -102,22 +115,55 @@ public class MainCharacter extends ADrawablePerson {
     }
 
     public void update (float delta) {
-        lookAtCursor();
+        lookAtCursor(delta);
         handleInput(delta);
+
+
+//        colliderBox.setPosition(pos.x - spriteWidth / 2f + dir.x * 11f, pos.y - spriteHeight / 2f + dir.y * 11f);
+
+
     }
 
     public void handleInput (float delta) {
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            pos.y += velY * delta;
+            if (pos.y + velY * delta < Utils.camera.viewportHeight) {
+                final Grid grid = Grid.getInstance();
+                grid.removeEntityFromCell(this);
+                pos.y += velY * delta;
+                grid.setEntityToCell(this);
+            } else {
+                pos.y = Utils.camera.viewportHeight;
+            }
         }
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            pos.y -= velY * delta;
+            if (pos.y - velY * delta >= 0) {
+                final Grid grid = Grid.getInstance();
+                grid.removeEntityFromCell(this);
+                pos.y -= velY * delta;
+                grid.setEntityToCell(this);
+            } else {
+                pos.y = 0;
+            }
         }
         if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            pos.x += velX * delta;
+            if (pos.x + velX * delta < Utils.camera.viewportWidth) {
+                final Grid grid = Grid.getInstance();
+                grid.removeEntityFromCell(this);
+                pos.x += velX * delta;
+                grid.setEntityToCell(this);
+            } else {
+                pos.x = Utils.camera.viewportWidth;
+            }
         }
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            pos.x -= velX * delta;
+            if (pos.x - velX * delta >= 0) {
+                final Grid grid = Grid.getInstance();
+                grid.removeEntityFromCell(this);
+                pos.x -= velX * delta;
+                grid.setEntityToCell(this);
+            } else {
+                pos.x = 0;
+            }
         }
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
             shoot();
@@ -125,20 +171,13 @@ public class MainCharacter extends ADrawablePerson {
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             dash(getDirection(), delta);
         }
-        checkForCollisions();
+
     }
 
     private void dash (Vector2 direction, float delta) {
         pos.x += direction.x * DASH_DISTANCE * delta;
         pos.y += direction.y * DASH_DISTANCE * delta;
 
-    }
-
-    private void checkForCollisions () {
-        OrthographicCamera camera = Utils.camera;
-        float viewportWidth = camera.viewportWidth;
-        float viewportHeight = camera.viewportHeight;
-        camera.unproject(p
     }
 
     @Override
@@ -150,8 +189,6 @@ public class MainCharacter extends ADrawablePerson {
         if (this.batch == null) {
             this.batch = batch;
         }
-        colliderCircle.setPosition(pos.x, pos.y);
-        colliderCircle.setRadius(characterSprite.getWidth() / 2f);
         characterSprite.setPosition(pos.x, pos.y);
         characterSprite.draw(batch);
 

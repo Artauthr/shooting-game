@@ -1,5 +1,7 @@
 package com.art.shooter.entities;
 
+import com.art.shooter.utils.Utils;
+import com.art.shooter.utils.screenUtils.Grid;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -49,9 +51,24 @@ public class BulletEntity extends ASimpleEntity {
         timer += delta;
         if (timer > lifeTime) {
             remove();
+            return;
         }
+        final Grid grid = Grid.getInstance();
+        grid.removeEntityFromCell(this);
         pos.x += direction.x * speed * delta;
         pos.y += direction.y * speed * delta;
+
+        if (pos.x > Utils.camera.viewportWidth || pos.x < 0) {
+            setFlaggedToRemove(true);
+            System.out.println("bullet set to remove");
+            return;
+        }
+        if (pos.y > Utils.camera.viewportHeight || pos.y < 0) {
+            setFlaggedToRemove(true);
+            System.out.println("bullet set to remove");
+            return;
+        }
+        grid.setEntityToCell(this);
     }
 
     @Override

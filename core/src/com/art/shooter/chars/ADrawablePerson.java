@@ -7,16 +7,16 @@ import com.badlogic.gdx.math.Vector2;
 import lombok.Getter;
 import lombok.Setter;
 
-public abstract class ADrawablePerson implements GameObject {
+public abstract class ADrawablePerson extends GameObject {
     protected float hp;
     protected float damage;
+
     @Getter
     protected Sprite characterSprite;
-    @Getter@Setter
-    protected Vector2 pos;
-    @Setter
-    @Getter
+
+    @Setter @Getter
     protected boolean isFlaggedToRemove;
+
     public abstract void update(float delta);
     public abstract void draw(Batch batch);
     public abstract void remove();

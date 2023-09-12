@@ -83,7 +83,7 @@ public class CustomInputProcessor implements InputProcessor {
         float deltaY = (mouseWorldCoords.y - camera.position.y) * (1 - newZoom / camera.zoom);
 
         // update the camera's zoom and position
-        camera.zoom = newZoom;
+//        camera.zoom = newZoom;
 //        camera.position.add(deltaX, deltaY, 0);
         camera.update();
         return true;

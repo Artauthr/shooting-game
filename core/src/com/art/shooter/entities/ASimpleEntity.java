@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.utils.Pool;
 import lombok.Setter;
 
-public abstract class ASimpleEntity implements Pool.Poolable, GameObject {
+public abstract class ASimpleEntity extends GameObject implements Pool.Poolable {
     @Setter
     private boolean flaggedToRemove;
     protected abstract void update(float delta);

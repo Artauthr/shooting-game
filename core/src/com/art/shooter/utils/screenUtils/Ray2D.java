@@ -1,4 +1,4 @@
-package com.art.shooter.utils;
+package com.art.shooter.utils.screenUtils;
 
 import com.badlogic.gdx.math.Vector2;
 

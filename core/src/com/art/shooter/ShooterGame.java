@@ -7,15 +7,17 @@ import com.art.shooter.logic.CustomInputProcessor;
 import com.art.shooter.logic.GameLogic;
 import com.art.shooter.ui.ColorLibrary;
 import com.art.shooter.ui.GameUI;
+import com.art.shooter.utils.screenUtils.DebugLineRenderer;
 import com.art.shooter.utils.Utils;
+import com.art.shooter.utils.screenUtils.Grid;
+import com.art.shooter.utils.screenUtils.GridCell;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -33,29 +35,32 @@ public class ShooterGame extends ApplicationAdapter {
 	private GameLogic gameLogic;
 	private int gridSize = 32;
 	private OrthographicCamera camera;
+	private DebugLineRenderer debugRenderer;
+	private Grid grid;
 	
 	@Override
 	public void create () {
 		batch = new PolygonSpriteBatch();
 		shapeRenderer = new ShapeRenderer();
+		shapeRenderer.setAutoShapeType(true);
 
 		entitySystem = EntitySystem.getInstance();
 		charManager = CharacterManager.getInstance();
 		charManager.createCharacter(MainCharacter.class);
 		gameLogic = GameLogic.getInstance();
 
-		camera = new OrthographicCamera(200,100);
-		Utils.camera = camera;
-		camera.position.set(charManager.getMainCharacter().getPos().x, charManager.getMainCharacter().getPos().y, 0);
-		camera.zoom = 5f;
+		camera = new OrthographicCamera(1280,720);
+		camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
 		camera.update();
+		Utils.camera = camera;
+
+		grid = Grid.getInstance();
+
+		debugRenderer = new DebugLineRenderer();
 
 
 		Gdx.input.setInputProcessor(new CustomInputProcessor());
 		gameUI = new GameUI(new ScreenViewport(), batch);
-
-		int width = Gdx.graphics.getWidth();
-		int height = Gdx.graphics.getHeight();
 	}
 
 	@Override
@@ -77,19 +82,17 @@ public class ShooterGame extends ApplicationAdapter {
 			entitySystem.updateEntities(deltaTime);
 		}
 
-//		gameUI.act();
-		if (tmpTimer > 5f && enemyCounter < enemyCount)  {
-			charManager.spawnEnemyAtRandom();
-			tmpTimer = 0f;
-			enemyCounter++;
-		}
-		if (tmpTimer2 > 2f) {
-			System.out.println("X:" + Gdx.input.getX());
-			System.out.println("Y:" + + Gdx.input.getY());
-			tmpTimer2 = 0;
-		}
+//		if (tmpTimer > 5f && enemyCounter < enemyCount)  {
+//			charManager.spawnEnemyAtRandom();
+//			tmpTimer = 0f;
+//			enemyCounter++;
+//		}
 
 		batch.end();
+
+		debugRenderer.draw(shapeRenderer);
+
+		grid.debug(shapeRenderer);
 
 
 
@@ -128,6 +131,8 @@ public class ShooterGame extends ApplicationAdapter {
 		batch.dispose();
 		shapeRenderer.dispose();
 		entitySystem.dispose();
+		charManager.dispose();
 	}
+
 
 }
