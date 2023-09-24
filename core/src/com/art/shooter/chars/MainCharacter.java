@@ -3,9 +3,10 @@ package com.art.shooter.chars;
 import com.art.shooter.entities.BulletEntity;
 import com.art.shooter.entities.EntitySystem;
 
+import com.art.shooter.logic.API;
+import com.art.shooter.ui.GameUI;
 import com.art.shooter.utils.Utils;
 import com.art.shooter.utils.screenUtils.Grid;
-import com.art.shooter.utils.screenUtils.GridCell;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Camera;
@@ -18,7 +19,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
-public class MainCharacter extends ADrawablePerson {
+public class MainCharacter extends ACharacter {
     private float velX;
     private float velY;
     private final float SPEED = 240f;
@@ -73,30 +74,13 @@ public class MainCharacter extends ADrawablePerson {
         return direction;
     }
 
-    private float timer = 4f;
     private void lookAtCursor (float delta) {
-        timer += delta;
         characterSprite.setRotation(getAngle());
-        colliderCircle.setRadius(11.5f);
-        final float xOffset = getDirection().x * 2f;
-        final float yOffset = getDirection().y * 2f;
-
-        colliderCircle.setPosition(pos.x + 9f, pos.y + 5f);
-
-        if (timer > 2.5f) {
-            System.out.println("colliderCircle.x = " + colliderCircle.x);
-            System.out.println("colliderCircle.y = " + colliderCircle.y);
-//            System.out.println("direction.x = " + getDirection().x);
-//            System.out.println("direction.y = " + getDirection().y);
-//            System.out.println("angle = " + getAngle());
-            timer = 0f;
-        }
-
     }
 
     private void shoot() {
         final Vector2 direction = getDirection();
-        EntitySystem entitySystem = EntitySystem.getInstance();
+        EntitySystem entitySystem = API.get(EntitySystem.class);
         BulletEntity entity = entitySystem.createEntity(BulletEntity.class);
 
         final float angle = getAngle();
@@ -115,63 +99,62 @@ public class MainCharacter extends ADrawablePerson {
     public void update (float delta) {
         lookAtCursor(delta);
         handleInput(delta);
-
-
-//        colliderBox.setPosition(pos.x - spriteWidth / 2f + dir.x * 11f, pos.y - spriteHeight / 2f + dir.y * 11f);
-
-
+        colliderCircle.setRadius(11.5f);
+        colliderCircle.setPosition(pos.x, pos.y);
     }
 
     public void handleInput (float delta) {
+        colliderCircle.setPosition(pos.x, pos.y);
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
             if (pos.y + velY * delta < Utils.camera.viewportHeight) {
-                final Grid grid = Grid.getInstance();
-                grid.removeEntityFromCellV2(this);
+                final Grid grid = API.get(Grid.class);
+                grid.removeEntityFromCell(this);
                 pos.y += velY * delta;
-                grid.addEntityToCellV2(this);
+                grid.addEntityToCell(this);
             } else {
                 pos.y = Utils.camera.viewportHeight;
             }
         }
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
             if (pos.y - velY * delta >= 0) {
-                final Grid grid = Grid.getInstance();
-                grid.removeEntityFromCellV2(this);
+                final Grid grid = API.get(Grid.class);
+                grid.removeEntityFromCell(this);
                 pos.y -= velY * delta;
-                grid.addEntityToCellV2(this);
+                grid.addEntityToCell(this);
             } else {
                 pos.y = 0;
             }
         }
         if (Gdx.input.isKeyPressed(Input.Keys.D)) {
             if (pos.x + velX * delta < Utils.camera.viewportWidth) {
-                final Grid grid = Grid.getInstance();
-                grid.removeEntityFromCellV2(this);
+                final Grid grid = API.get(Grid.class);
+                grid.removeEntityFromCell(this);
                 pos.x += velX * delta;
-                grid.addEntityToCellV2(this);
+                grid.addEntityToCell(this);
             } else {
                 pos.x = Utils.camera.viewportWidth;
             }
         }
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
             if (pos.x - velX * delta >= 0) {
-                final Grid grid = Grid.getInstance();
-                grid.removeEntityFromCellV2(this);
+                final Grid grid = API.get(Grid.class);
+                grid.removeEntityFromCell(this);
                 pos.x -= velX * delta;
-                grid.addEntityToCellV2(this);
+                grid.addEntityToCell(this);
             } else {
                 pos.x = 0;
             }
         }
-        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+
+        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
             shoot();
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             dash(getDirection(), delta);
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.V)) {
-            Grid instance = Grid.getInstance();
-            instance.getNumOfOccupiedCells();
+            final Grid grid = API.get(Grid.class);
+            grid.printNumOfOccupiedCells();
         }
 
 
@@ -192,34 +175,7 @@ public class MainCharacter extends ADrawablePerson {
         if (this.batch == null) {
             this.batch = batch;
         }
-        characterSprite.setPosition(pos.x, pos.y);
         characterSprite.draw(batch);
-
-//        // Draw origin as a debug point
-//        batch.end(); // End the batch to switch to immediate mode rendering
-//        shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix()); // Set projection matrix
-//        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-//        shapeRenderer.setColor(Color.RED);
-//        final float originX = pos.x + characterSprite.getOriginX();
-//        final float originY = pos.y + characterSprite.getOriginY();
-//        shapeRenderer.circle(originX, originY, 1); // Increase the circle size for better visibility
-//        shapeRenderer.end();
-//        batch.begin(); // Begin the batch again to continue rendering other objects
-//
-//
-//        // Draw origin as a debug point
-//        batch.end(); // End the batch to switch to immediate mode rendering
-//        shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix()); // Set projection matrix
-//        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-//        shapeRenderer.setColor(Color.WHITE);
-//        muzzleOffset.set(4, 30);
-//        muzzleOffset.rotateDeg(getAngle());
-//        final float muzzleX = pos.x + characterSprite.getOriginX() + muzzleOffset.x;
-//        final float muzzleY = pos.y + characterSprite.getOriginY() + muzzleOffset.y;
-//
-//        shapeRenderer.circle(muzzleX, muzzleY, 1); // Increase the circle size for better visibility
-//        shapeRenderer.end();
-//        batch.begin(); // Begin the batch again to continue rendering other objects
     }
 
     @Override

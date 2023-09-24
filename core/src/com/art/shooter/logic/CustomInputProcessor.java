@@ -11,8 +11,7 @@ public class CustomInputProcessor implements InputProcessor {
     @Override
     public boolean keyDown(int keycode) {
         if (keycode == Input.Keys.ESCAPE) {
-            final GameLogic gameLogic = GameLogic.getInstance();
-
+            GameLogic gameLogic = API.get(GameLogic.class);
             if (gameLogic.isPaused()) {
                 gameLogic.unPause();
             } else {

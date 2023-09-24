@@ -3,11 +3,10 @@ package com.art.shooter.chars;
 import com.art.shooter.logic.GameObject;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.Vector2;
 import lombok.Getter;
 import lombok.Setter;
 
-public abstract class ADrawablePerson extends GameObject {
+public abstract class ACharacter extends GameObject {
     protected float hp;
     protected float damage;
 

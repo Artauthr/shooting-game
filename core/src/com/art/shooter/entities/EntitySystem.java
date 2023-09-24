@@ -8,21 +8,13 @@ import com.badlogic.gdx.utils.Pools;
 import lombok.Getter;
 
 public class EntitySystem implements Disposable {
-    private static EntitySystem instance;
 
     @Getter
     private Array<ASimpleEntity> entities = new Array<>();
     private Array<ASimpleEntity> toDispose = new Array<>();
 
-    private EntitySystem() {
+    public EntitySystem() {
 
-    }
-
-    public static EntitySystem getInstance () {
-        if (instance == null) {
-            instance = new EntitySystem();
-        }
-        return instance;
     }
 
     public <T extends ASimpleEntity> T createEntity(Class<T> clazz) {

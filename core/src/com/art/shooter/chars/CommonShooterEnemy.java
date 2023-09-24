@@ -2,6 +2,7 @@ package com.art.shooter.chars;
 
 import com.art.shooter.entities.BulletEntity;
 import com.art.shooter.entities.EntitySystem;
+import com.art.shooter.logic.API;
 import com.art.shooter.logic.CharacterManager;
 import com.art.shooter.utils.Utils;
 import com.art.shooter.utils.screenUtils.Grid;
@@ -38,31 +39,36 @@ public class CommonShooterEnemy extends AEnemy {
     private void simulate (float delta) {
         lookAtMainCharacter();
         move(delta);
-        shootAtMainCharacter(delta);
+//        shootAtMainCharacter(delta);
 
     }
 
     private void move (float delta) {
-        MainCharacter mainCharacter = CharacterManager.getInstance().getMainCharacter();
+        CharacterManager characterManager = API.get(CharacterManager.class);
+        MainCharacter mainCharacter = characterManager.getMainCharacter();
         float distance = Utils.getDistanceBetweenTwoVectors(mainCharacter.getPos(), this.pos);
         Vector2 direction = getDirection();
 
+        Grid grid = API.get(Grid.class);
+
         if (distance > optimalDistance) {
             //get up close and personal
-            Grid.getInstance().removeEntityFromCell(this);
+            grid.removeEntityFromCell(this);
             pos.x += direction.x * speed * delta;
             pos.y += direction.y * speed * delta;
+            grid.addEntityToCell(this);
         } else {
             //create some distance
-            Grid.getInstance().removeEntityFromCell(this);
+            grid.removeEntityFromCell(this);
             pos.x -= direction.x * speed * delta;
             pos.y -= direction.y * speed * delta;
+            grid.addEntityToCell(this);
         }
     }
 
     private void shootAtMainCharacter (float delta) {
         final Vector2 direction = getDirection();
-        EntitySystem entitySystem = EntitySystem.getInstance();
+        EntitySystem entitySystem = API.get(EntitySystem.class);
 
         shootCooldownTimer += delta;
 
@@ -83,7 +89,7 @@ public class CommonShooterEnemy extends AEnemy {
     }
 
     private float getMainCharAngle () {
-        CharacterManager charManager = CharacterManager.getInstance();
+        CharacterManager charManager = API.get(CharacterManager.class);
         MainCharacter mainCharacter = charManager.getMainCharacter();
 
         final float x = mainCharacter.getPos().x;
@@ -93,7 +99,7 @@ public class CommonShooterEnemy extends AEnemy {
     }
 
     private Vector2 getDirection () {
-        CharacterManager charManager = CharacterManager.getInstance();
+        CharacterManager charManager = API.get(CharacterManager.class);
         MainCharacter mainCharacter = charManager.getMainCharacter();
         Vector2 mainCharPos = new Vector2(mainCharacter.getPos().x, mainCharacter.getPos().y);
         Vector2 direction = new Vector2(mainCharPos.x - pos.x, mainCharPos.y - pos.y);

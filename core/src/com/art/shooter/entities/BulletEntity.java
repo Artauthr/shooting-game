@@ -1,11 +1,17 @@
 package com.art.shooter.entities;
 
+import com.art.shooter.chars.ACharacter;
+import com.art.shooter.logic.API;
+import com.art.shooter.logic.GameObject;
+import com.art.shooter.utils.CollisionDetector;
 import com.art.shooter.utils.Utils;
 import com.art.shooter.utils.screenUtils.Grid;
+import com.art.shooter.utils.screenUtils.GridCell;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,6 +26,7 @@ public class BulletEntity extends ASimpleEntity {
     private final float speed = 800f;
     private final float lifeTime = 4f;
     private float timer = 0f;
+    private GridCell currCell;
 
     public BulletEntity () {
         Texture bullet = new Texture("bullet.png");
@@ -51,22 +58,33 @@ public class BulletEntity extends ASimpleEntity {
             remove();
             return;
         }
-        final Grid grid = Grid.getInstance();
+        final Grid grid = API.get(Grid.class);
         grid.removeEntityFromCell(this);
         pos.x += direction.x * speed * delta;
         pos.y += direction.y * speed * delta;
 
         if (pos.x > Utils.camera.viewportWidth || pos.x < 0) {
             setFlaggedToRemove(true);
-            System.out.println("bullet set to remove");
             return;
         }
         if (pos.y > Utils.camera.viewportHeight || pos.y < 0) {
             setFlaggedToRemove(true);
-            System.out.println("bullet set to remove");
             return;
         }
-        grid.addEntityToCell(this);
+        this.currCell = grid.addEntityToCell(this);
+    }
+
+    public void checkForCollision () {
+        if (this.currCell != null) {
+            Array<GameObject> gameObjects = currCell.getGameObjects();
+            for (GameObject gameObject : gameObjects) {
+                if (gameObject == this) continue;
+                boolean hit = CollisionDetector.bulletToCharacter(this, (ACharacter) gameObject);
+                if (hit) {
+                    System.out.println("another one bites a dust");
+                }
+            }
+        }
     }
 
     @Override

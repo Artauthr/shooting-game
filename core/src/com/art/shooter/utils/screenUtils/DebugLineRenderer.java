@@ -1,13 +1,12 @@
 package com.art.shooter.utils.screenUtils;
 
 import com.art.shooter.chars.MainCharacter;
+import com.art.shooter.logic.API;
 import com.art.shooter.logic.CharacterManager;
 import com.art.shooter.utils.Utils;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.Rectangle;
 
 public class DebugLineRenderer {
 
@@ -27,15 +26,12 @@ public class DebugLineRenderer {
         shapeRenderer.line(viewportWidth, 0, viewportWidth, viewportHeight);
         // end bounds
 
-        //ahg
-        final MainCharacter mainCharacter = CharacterManager.getInstance().getMainCharacter();
+//        circle
+        final MainCharacter mainCharacter = API.get(CharacterManager.class).getMainCharacter();
         final Circle colliderBox = mainCharacter.getColliderCircle();
         shapeRenderer.circle(colliderBox.x, colliderBox.y, colliderBox.radius);
-        //argh
+//        circle
 
-        //oo
-        final Sprite sprite = mainCharacter.getCharacterSprite();
-        shapeRenderer.circle(sprite.getX() + sprite.getOriginX(), sprite.getY() + sprite.getOriginY(), 1);
 
         shapeRenderer.end();
     }

@@ -1,39 +1,23 @@
 package com.art.shooter.utils.screenUtils;
 
-import com.art.shooter.chars.ADrawablePerson;
 import com.art.shooter.logic.GameObject;
 import com.art.shooter.utils.Utils;
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.OrderedSet;
-
-import java.util.HashSet;
 
 // the griddy
 public class Grid {
     private int cellSize;
     private int rowAmount;
     private int colAmount;
-
-    private static Grid instance;
-
     private GridCell[][] cells;
 
-    private Grid() {
+    public Grid() {
         construct(Utils.camera.viewportWidth, Utils.camera.viewportHeight);
-    }
-
-
-    public static Grid getInstance() {
-        if (instance == null) {
-            instance = new Grid();
-        }
-        return instance;
     }
 
     private void construct (float width, float height) {
@@ -53,7 +37,7 @@ public class Grid {
 
     }
 
-    public Vector2 getCellPos (float x, float y) {
+    public GridCell getCellAt (float x, float y) {
         final int u = (int) (x / cellSize);
         final int v = (int) (y / cellSize);
 
@@ -61,12 +45,7 @@ public class Grid {
         int j = Math.min(u, colAmount - 1);
         int i = Math.min(v,rowAmount - 1);
 
-        return new Vector2(i, j);
-    }
-
-    public GridCell getCellAt (float x, float y) {
-        final Vector2 cellPos = getCellPos(x, y);
-        return cells[(int) cellPos.x][(int) cellPos.y];
+        return cells[i][j];
     }
 
     public GridCell getCellAt (Vector2 vec2) {
@@ -77,10 +56,12 @@ public class Grid {
         OrderedSet<GridCell> cells = new OrderedSet<>();
         GridCell centerCell = getCellAt(colliderCircle.x, colliderCircle.y);
 
-        GridCell cell1 = getCellAt(getCellPos(colliderCircle.x + colliderCircle.radius, colliderCircle.y));
-        GridCell cell2 = getCellAt(getCellPos(colliderCircle.x - colliderCircle.radius, colliderCircle.y));
-        GridCell cell3 = getCellAt(getCellPos(colliderCircle.x, colliderCircle.y + colliderCircle.radius));
-        GridCell cell4 = getCellAt(getCellPos(colliderCircle.x, colliderCircle.y - colliderCircle.radius));
+        float xPlus = colliderCircle.x + colliderCircle.radius;
+        float xMinus = colliderCircle.x - colliderCircle.radius;
+        GridCell cell1 = getCellAt(xPlus, colliderCircle.y);
+        GridCell cell2 = getCellAt(xMinus, colliderCircle.y);
+        GridCell cell3 = getCellAt(colliderCircle.x, colliderCircle.y + colliderCircle.radius);
+        GridCell cell4 = getCellAt(colliderCircle.x, colliderCircle.y - colliderCircle.radius);
 
         cells.add(centerCell);
         cells.add(cell1);
@@ -96,22 +77,32 @@ public class Grid {
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setProjectionMatrix(Utils.camera.combined);
         shapeRenderer.setColor(1, 1, 1, 0.5f);  // Set color to transparent white (50% transparency)
 
-        for (int i = 0; i < rowAmount; i++) {
-            shapeRenderer.line(0, i * 80, Utils.camera.viewportWidth, i * 80);
+//        for (int i = 0; i < rowAmount; i++) {
+//            shapeRenderer.line(0, i * 80, Utils.camera.viewportWidth, i * 80);
+//        }
+//
+//        for (int i = 0; i < colAmount; i++) {
+//            shapeRenderer.line(i * 80, Utils.camera.viewportHeight, i * 80, 0);
+//        }
+
+        for (int i = 0; i < cells.length; i++) {
+            for (int j = 0; j < cells[i].length; j++) {
+                float x = i * cellSize;
+                float y = j * cellSize;
+                shapeRenderer.rect(x, y, cellSize, cellSize);
+            }
         }
 
-        for (int i = 0; i < colAmount; i++) {
-            shapeRenderer.line(i * 80, Utils.camera.viewportHeight, i * 80, 0);
-        }
 
         shapeRenderer.end();
 
         Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 
-    public int getNumOfOccupiedCells () {
+    public void printNumOfOccupiedCells () {
         int count = 0;
         for (GridCell[] cell : cells) {
             for (GridCell gridCell : cell) {
@@ -121,13 +112,13 @@ public class Grid {
             }
         }
         System.out.println("Occupied Cells " + count);
-        return count;
     }
 
 
-    public void addEntityToCell (GameObject gameObject) {
-        final Grid grid = Grid.getInstance();
-        grid.getCellAt(gameObject.getPos()).getGameObjects().add(gameObject);
+    public GridCell addEntityToCell (GameObject gameObject) {
+        GridCell cell = getCellAt(gameObject.getPos());
+        cell.getGameObjects().add(gameObject);
+        return cell;
     }
 
     public void addEntityToCellV2 (GameObject gameObject) {

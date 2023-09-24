@@ -1,15 +1,11 @@
 package com.art.shooter.logic;
 
 
-import com.art.shooter.chars.ADrawablePerson;
+import com.art.shooter.chars.ACharacter;
+import com.art.shooter.chars.AEnemy;
 import com.art.shooter.chars.CommonShooterEnemy;
 import com.art.shooter.chars.MainCharacter;
 import com.art.shooter.utils.Utils;
-import com.art.shooter.utils.screenUtils.Grid;
-import com.art.shooter.utils.screenUtils.GridCell;
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
@@ -20,42 +16,34 @@ import com.badlogic.gdx.utils.Pools;
 import lombok.Getter;
 
 public class CharacterManager implements Disposable {
-    /*this class manages the main player and enemies/NPC-s
-    and interactions between them
+    /*
+    this class manages the main player and enemies/NPC-s
     */
-    private static CharacterManager instance;
     @Getter
     private MainCharacter mainCharacter; //there should be only 1 mainChar
     @Getter
-    private Array<ADrawablePerson> characters;
+    private Array<ACharacter> characters;
 
-    private CharacterManager () {
+    public CharacterManager () {
         this.characters = new Array<>();
     }
 
-    public static CharacterManager getInstance() {
-        if (instance == null) {
-            instance = new CharacterManager();
-        }
-        return instance;
-    }
-
     public void updateCharacters (float delta) {
-        Array.ArrayIterator<ADrawablePerson> iterator = characters.iterator();
+        Array.ArrayIterator<ACharacter> iterator = characters.iterator();
         while (iterator.hasNext()) {
-            ADrawablePerson next = iterator.next();
+            ACharacter next = iterator.next();
             if (next.isFlaggedToRemove()) {
                 Pools.free(next);
                 iterator.remove();
             }
         }
-        for (ADrawablePerson character : characters) {
+        for (ACharacter character : characters) {
             character.update(delta);
         }
     }
 
     public void drawCharacters (PolygonSpriteBatch batch) {
-        for (ADrawablePerson character : characters) {
+        for (ACharacter character : characters) {
             final Sprite sprite = character.getCharacterSprite();
             final Vector2 pos = character.getPos();
             sprite.setPosition(pos.x, pos.y);
@@ -63,7 +51,7 @@ public class CharacterManager implements Disposable {
         }
     }
 
-    public <T extends ADrawablePerson> T createCharacter(Class<T> clazz) {
+    public <T extends ACharacter> T createCharacter(Class<T> clazz) {
         T character = Pools.obtain(clazz);
         characters.add(character);
         if (character instanceof MainCharacter) {
@@ -72,8 +60,8 @@ public class CharacterManager implements Disposable {
         return character;
     }
 
-    public void spawnEnemy (float x, float y) {
-        CommonShooterEnemy enemy = createCharacter(CommonShooterEnemy.class);
+    public <T extends AEnemy> void spawnEnemy (Class<T> enemyClass, float x, float y) {
+        AEnemy enemy = createCharacter(enemyClass);
         enemy.getPos().x = x;
         enemy.getPos().y = y;
         characters.add(enemy);
@@ -86,14 +74,14 @@ public class CharacterManager implements Disposable {
         int randomX = (int) MathUtils.random(20, viewportWidth);
         int randomY = (int) MathUtils.random(20, viewportHeight);
 
-        spawnEnemy(randomX, randomY);
+        spawnEnemy(CommonShooterEnemy.class, randomX, randomY);
     }
 
 
 
     @Override
     public void dispose() {
-        for (ADrawablePerson character : characters) {
+        for (ACharacter character : characters) {
             character.dispose();
         }
     }
