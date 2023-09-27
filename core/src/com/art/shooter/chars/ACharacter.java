@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 public abstract class ACharacter extends GameObject {
+    @Getter @Setter
     protected float hp;
     protected float damage;
 
@@ -22,5 +23,5 @@ public abstract class ACharacter extends GameObject {
     public abstract void remove();
     public abstract void dispose();
     public void onHit() {}
-    public void onHit(Vector2 direction) {}
+    public void onHit(Vector2 direction, float damage) {}
 }

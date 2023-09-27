@@ -60,11 +60,18 @@ public class CharacterManager implements Disposable {
         return character;
     }
 
-    public <T extends AEnemy> void spawnEnemy (Class<T> enemyClass, float x, float y) {
+    public <T extends AEnemy> T spawnEnemy (Class<T> enemyClass, float x, float y) {
         AEnemy enemy = createCharacter(enemyClass);
         enemy.getPos().x = x;
         enemy.getPos().y = y;
         characters.add(enemy);
+        return (T) enemy;
+    }
+
+    public <T extends AEnemy> T spawnEnemy (Class<T> enemyClass, float x, float y, float hp) {
+        T enemy = spawnEnemy(enemyClass, x, y);
+        enemy.setHp(hp);
+        return enemy;
     }
 
     public void spawnEnemyAtRandom () {

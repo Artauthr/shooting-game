@@ -7,6 +7,7 @@ import com.art.shooter.logic.API;
 import com.art.shooter.ui.GameUI;
 import com.art.shooter.utils.Utils;
 import com.art.shooter.utils.screenUtils.Grid;
+import com.art.shooter.utils.screenUtils.GridCell;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Camera;
@@ -18,6 +19,7 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Array;
 
 public class MainCharacter extends ACharacter {
     private float velX;
@@ -93,6 +95,7 @@ public class MainCharacter extends ACharacter {
         entity.setPos(bulletPos);
         entity.setDirection(direction);
         entity.setRotation(angle);
+        entity.setDamage(1);
     }
 
     public void update (float delta) {
@@ -167,6 +170,10 @@ public class MainCharacter extends ACharacter {
 
     @Override
     public void remove() {
+        Array<GridCell> cellsAtRect = API.get(Grid.class).getCellsAtRect(boundingBox);
+        for (GridCell gridCell : cellsAtRect) {
+            gridCell.remove(this);
+        }
         isFlaggedToRemove = true;
     }
 

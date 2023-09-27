@@ -30,6 +30,9 @@ public class BulletEntity extends ASimpleEntity {
     private float timer = 0f;
     private GridCell currCell;
 
+    @Setter
+    private float damage;
+
     public BulletEntity () {
         Texture bullet = new Texture("bullet.png");
         bulletSprite  = new Sprite(bullet);
@@ -88,7 +91,8 @@ public class BulletEntity extends ASimpleEntity {
                 if (!(gameObject instanceof ACharacter)) continue;
                 boolean hit = Intersector.overlaps(colliderCircle, gameObject.getBoundingBox());
                 if (hit) {
-                    ((ACharacter) gameObject).onHit(direction);
+                    ((ACharacter) gameObject).onHit(direction, this.damage);
+                    this.remove();
                     System.out.println("hittt");
                 }
             }

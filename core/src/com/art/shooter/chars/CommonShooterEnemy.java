@@ -38,35 +38,31 @@ public class CommonShooterEnemy extends AEnemy {
 
     private void simulate (float delta) {
         lookAtMainCharacter();
-//        move(delta);
-//        shootAtMainCharacter(delta);
-        final Grid grid = API.get(Grid.class);
-        grid.removeEntityFromCell(this);
-        boundingBox.setPosition(pos.x + 1, pos.y - 3);
-        grid.addEntityToCell(this);
+        move(delta);
+        shootAtMainCharacter(delta);
     }
 
     private void move (float delta) {
-//        CharacterManager characterManager = API.get(CharacterManager.class);
-//        MainCharacter mainCharacter = characterManager.getMainCharacter();
-//        float distance = Utils.getDistanceBetweenTwoVectors(mainCharacter.getPos(), this.pos);
-//        Vector2 direction = getDirection();
-//
+        CharacterManager characterManager = API.get(CharacterManager.class);
+        MainCharacter mainCharacter = characterManager.getMainCharacter();
+        float distance = Utils.getDistanceBetweenTwoVectors(mainCharacter.getPos(), this.pos);
+        Vector2 direction = getDirection();
+
         Grid grid = API.get(Grid.class);
-//
-//        if (distance > optimalDistance) {
-//            //get up close and personal
-//            grid.removeEntityFromCell(this);
-//            pos.x += direction.x * speed * delta;
-//            pos.y += direction.y * speed * delta;
-//            grid.addEntityToCell(this);
-//        } else {
-//            //create some distance
-//            grid.removeEntityFromCell(this);
-//            pos.x -= direction.x * speed * delta;
-//            pos.y -= direction.y * speed * delta;
-//            grid.addEntityToCell(this);
-//        }
+
+        if (distance > optimalDistance) {
+            //get up close and personal
+            grid.removeEntityFromCell(this);
+            pos.x += direction.x * speed * delta;
+            pos.y += direction.y * speed * delta;
+            grid.addEntityToCell(this);
+        } else {
+            //create some distance
+            grid.removeEntityFromCell(this);
+            pos.x -= direction.x * speed * delta;
+            pos.y -= direction.y * speed * delta;
+            grid.addEntityToCell(this);
+        }
         grid.removeEntityFromCellV2(this);
         boundingBox.setPosition(pos.x + 1, pos.y - 3);
         grid.addEntityToCellV2(this);
@@ -125,11 +121,17 @@ public class CommonShooterEnemy extends AEnemy {
     }
 
     @Override
-    public void onHit(Vector2 direction) {
-        final Vector2 scl = direction.scl(-1);
-        final float knockBackSpeed = 40f;
-        pos.x += scl.x * knockBackSpeed;
-        pos.y += scl.y * knockBackSpeed;
+    public void onHit(Vector2 direction, float damage) {
+        hp -= damage;
+        System.out.println("hp is = " + hp);
+        if (hp < 0) {
+            remove();
+            System.out.println("fuck im dead oh noo ohhh");
+            return;
+        }
+        final float knockBackSpeed = 450f;
+        pos.x += direction.x * knockBackSpeed * Gdx.graphics.getDeltaTime();
+        pos.y += direction.y * knockBackSpeed * Gdx.graphics.getDeltaTime();;
     }
 
     @Override

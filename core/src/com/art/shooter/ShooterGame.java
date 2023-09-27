@@ -1,5 +1,6 @@
 package com.art.shooter;
 
+import com.art.shooter.chars.CommonShooterEnemy;
 import com.art.shooter.chars.MainCharacter;
 import com.art.shooter.entities.EntitySystem;
 import com.art.shooter.logic.API;
