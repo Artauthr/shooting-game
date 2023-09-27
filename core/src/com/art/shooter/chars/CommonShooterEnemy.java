@@ -16,8 +16,6 @@ import lombok.Getter;
 
 public class CommonShooterEnemy extends AEnemy {
     private float shootCooldownTimer;
-    @Getter
-    private Rectangle boundingBox;
     private final float speed = 100f;
     private final float optimalDistance = 220f; //desired distance from player
     private final float bBoxMul = 1.2f;
@@ -33,14 +31,14 @@ public class CommonShooterEnemy extends AEnemy {
 
         hp = 100;
         damage = 10;
-        this.boundingBox = new Rectangle();
+
+        boundingBox.setSize(20, 22);
     }
 
     private void simulate (float delta) {
         lookAtMainCharacter();
         move(delta);
-//        shootAtMainCharacter(delta);
-
+        shootAtMainCharacter(delta);
     }
 
     private void move (float delta) {
@@ -64,6 +62,9 @@ public class CommonShooterEnemy extends AEnemy {
             pos.y -= direction.y * speed * delta;
             grid.addEntityToCell(this);
         }
+        grid.removeEntityFromCellV2(this);
+        boundingBox.setPosition(pos.x + 1, pos.y - 3);
+        grid.addEntityToCellV2(this);
     }
 
     private void shootAtMainCharacter (float delta) {

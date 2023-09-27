@@ -13,5 +13,8 @@ public abstract class GameObject {
     protected Circle colliderCircle = new Circle();
 
     @Getter @Setter
+    protected Rectangle boundingBox = new Rectangle();
+
+    @Getter @Setter
     protected Vector2 pos = new Vector2();
 }

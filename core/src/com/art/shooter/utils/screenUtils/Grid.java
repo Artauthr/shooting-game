@@ -3,14 +3,19 @@ package com.art.shooter.utils.screenUtils;
 import com.art.shooter.logic.GameObject;
 import com.art.shooter.utils.Utils;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.OrderedSet;
+import com.badlogic.gdx.utils.SnapshotArray;
 
 // the griddy
 public class Grid {
+    private Array<GridCell> tmp = new Array<>();
     private int cellSize;
     private int rowAmount;
     private int colAmount;
@@ -41,7 +46,6 @@ public class Grid {
         final int u = (int) (x / cellSize);
         final int v = (int) (y / cellSize);
 
-
         int j = Math.min(u, colAmount - 1);
         int i = Math.min(v,rowAmount - 1);
 
@@ -52,8 +56,21 @@ public class Grid {
         return getCellAt(vec2.x, vec2.y);
     }
 
-    public OrderedSet<GridCell> getCellsAt (Circle colliderCircle) {
-        OrderedSet<GridCell> cells = new OrderedSet<>();
+    public Array<GridCell> getCellsAtRect (Rectangle rectangle) {
+        final float x0 = rectangle.x;
+        final float y0 = rectangle.y;
+        final float x1 = rectangle.x + rectangle.width;
+        final float y1 = rectangle.y + rectangle.height;
+        tmp.clear();
+        tmp.add(getCellAt(x0, y0));
+        tmp.add(getCellAt(x1, y0));
+        tmp.add(getCellAt(x0, y1));
+        tmp.add(getCellAt(x1, y1));
+        return tmp;
+    }
+
+    public Array<GridCell> getCellsAt (Circle colliderCircle) {
+        tmp.clear();
         GridCell centerCell = getCellAt(colliderCircle.x, colliderCircle.y);
 
         float xPlus = colliderCircle.x + colliderCircle.radius;
@@ -63,13 +80,13 @@ public class Grid {
         GridCell cell3 = getCellAt(colliderCircle.x, colliderCircle.y + colliderCircle.radius);
         GridCell cell4 = getCellAt(colliderCircle.x, colliderCircle.y - colliderCircle.radius);
 
-        cells.add(centerCell);
-        cells.add(cell1);
-        cells.add(cell2);
-        cells.add(cell3);
-        cells.add(cell4);
+        tmp.add(centerCell);
+        tmp.add(cell1);
+        tmp.add(cell2);
+        tmp.add(cell3);
+        tmp.add(cell4);
 
-        return cells;
+        return tmp;
     }
 
     public void debug (ShapeRenderer shapeRenderer) {
@@ -78,24 +95,21 @@ public class Grid {
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setProjectionMatrix(Utils.camera.combined);
-        shapeRenderer.setColor(1, 1, 1, 0.5f);  // Set color to transparent white (50% transparency)
+        shapeRenderer.setColor(1, 1, 1, 0.23f);
 
-//        for (int i = 0; i < rowAmount; i++) {
-//            shapeRenderer.line(0, i * 80, Utils.camera.viewportWidth, i * 80);
-//        }
-//
-//        for (int i = 0; i < colAmount; i++) {
-//            shapeRenderer.line(i * 80, Utils.camera.viewportHeight, i * 80, 0);
-//        }
 
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[i].length; j++) {
-                float x = i * cellSize;
-                float y = j * cellSize;
-                shapeRenderer.rect(x, y, cellSize, cellSize);
+                final float cellCenterX = j * cellSize;
+                final float cellCenterY = i * cellSize;
+                final GridCell gridCell = cells[i][j];
+                if (gridCell.getGameObjects().size > 0) {
+                    shapeRenderer.rect(cellCenterX, cellCenterY, cellSize, cellSize, Color.GREEN,Color.GREEN,Color.GREEN,Color.GREEN);
+                } else {
+                    shapeRenderer.rect(cellCenterX, cellCenterY, cellSize, cellSize);
+                }
             }
         }
-
 
         shapeRenderer.end();
 
@@ -122,15 +136,15 @@ public class Grid {
     }
 
     public void addEntityToCellV2 (GameObject gameObject) {
-        Circle colliderCircle = gameObject.getColliderCircle();
-        OrderedSet<GridCell> cellsToAdd = getCellsAt(colliderCircle);
+        Rectangle boundingBox = gameObject.getBoundingBox();
+        Array<GridCell> cellsToAdd = getCellsAtRect(boundingBox);
         for (GridCell gridCell : cellsToAdd) {
             gridCell.add(gameObject);
         }
     }
 
     public void removeEntityFromCellV2 (GameObject gameObject) {
-        OrderedSet<GridCell> cellsToRemoveFrom = getCellsAt(gameObject.getColliderCircle());
+        Array<GridCell> cellsToRemoveFrom = getCellsAtRect(gameObject.getBoundingBox());
         for (GridCell gridCell : cellsToRemoveFrom) {
             gridCell.remove(gameObject);
         }

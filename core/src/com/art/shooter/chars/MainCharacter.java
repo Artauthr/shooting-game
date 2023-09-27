@@ -43,8 +43,7 @@ public class MainCharacter extends ACharacter {
         final float originX = characterSprite.getWidth() / 2.0f + 0.5f;
         final float originY = characterSprite.getHeight() / 2.0f - 2;
         characterSprite.setOrigin(originX, originY);
-
-        colliderCircle = new Circle();
+        boundingBox.setSize(20, 22);
     }
 
     private float getAngle () {
@@ -99,18 +98,15 @@ public class MainCharacter extends ACharacter {
     public void update (float delta) {
         lookAtCursor(delta);
         handleInput(delta);
-        colliderCircle.setRadius(11.5f);
-        colliderCircle.setPosition(pos.x, pos.y);
     }
 
     public void handleInput (float delta) {
-        colliderCircle.setPosition(pos.x, pos.y);
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
             if (pos.y + velY * delta < Utils.camera.viewportHeight) {
                 final Grid grid = API.get(Grid.class);
-                grid.removeEntityFromCell(this);
+//                grid.removeEntityFromCell(this);
                 pos.y += velY * delta;
-                grid.addEntityToCell(this);
+//                grid.addEntityToCell(this);
             } else {
                 pos.y = Utils.camera.viewportHeight;
             }
@@ -118,9 +114,9 @@ public class MainCharacter extends ACharacter {
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
             if (pos.y - velY * delta >= 0) {
                 final Grid grid = API.get(Grid.class);
-                grid.removeEntityFromCell(this);
+//                grid.removeEntityFromCell(this);
                 pos.y -= velY * delta;
-                grid.addEntityToCell(this);
+//                grid.addEntityToCell(this);
             } else {
                 pos.y = 0;
             }
@@ -128,9 +124,9 @@ public class MainCharacter extends ACharacter {
         if (Gdx.input.isKeyPressed(Input.Keys.D)) {
             if (pos.x + velX * delta < Utils.camera.viewportWidth) {
                 final Grid grid = API.get(Grid.class);
-                grid.removeEntityFromCell(this);
+//                grid.removeEntityFromCell(this);
                 pos.x += velX * delta;
-                grid.addEntityToCell(this);
+//                grid.addEntityToCell(this);
             } else {
                 pos.x = Utils.camera.viewportWidth;
             }
@@ -138,26 +134,29 @@ public class MainCharacter extends ACharacter {
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
             if (pos.x - velX * delta >= 0) {
                 final Grid grid = API.get(Grid.class);
-                grid.removeEntityFromCell(this);
+//                grid.removeEntityFromCell(this);
                 pos.x -= velX * delta;
-                grid.addEntityToCell(this);
+//                grid.addEntityToCell(this);
             } else {
                 pos.x = 0;
             }
         }
+        final Grid grid = API.get(Grid.class);
+        grid.removeEntityFromCellV2(this);
+        boundingBox.setPosition(pos.x + 1, pos.y - 3);
+        grid.addEntityToCellV2(this);
 
-        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
             shoot();
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             dash(getDirection(), delta);
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.V)) {
-            final Grid grid = API.get(Grid.class);
-            grid.printNumOfOccupiedCells();
+            System.out.println("pos.toString() = " + pos.toString());
+            System.out.println("colliderBOX X= " + colliderCircle.x);
+            System.out.println("colliderBOX Y= " + colliderCircle.y);
         }
-
-
     }
 
     private void dash (Vector2 direction, float delta) {
@@ -172,9 +171,7 @@ public class MainCharacter extends ACharacter {
     }
 
     public void draw (Batch batch) {
-        if (this.batch == null) {
-            this.batch = batch;
-        }
+        characterSprite.setPosition(pos.x, pos.y);
         characterSprite.draw(batch);
     }
 

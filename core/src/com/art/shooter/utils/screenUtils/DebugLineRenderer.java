@@ -7,6 +7,7 @@ import com.art.shooter.utils.Utils;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Rectangle;
 
 public class DebugLineRenderer {
 
@@ -26,11 +27,14 @@ public class DebugLineRenderer {
         shapeRenderer.line(viewportWidth, 0, viewportWidth, viewportHeight);
         // end bounds
 
-//        circle
         final MainCharacter mainCharacter = API.get(CharacterManager.class).getMainCharacter();
-        final Circle colliderBox = mainCharacter.getColliderCircle();
-        shapeRenderer.circle(colliderBox.x, colliderBox.y, colliderBox.radius);
+
 //        circle
+//        final Circle colliderCircle = mainCharacter.getColliderCircle();
+//        shapeRenderer.circle(colliderCircle.x, colliderCircle.y, colliderCircle.radius);
+
+//        final Rectangle colliderBox = mainCharacter.getBoundingBox();
+//        shapeRenderer.rect(colliderBox.getX(), colliderBox.getY(), colliderBox.getWidth(), colliderBox.getHeight());
 
 
         shapeRenderer.end();
