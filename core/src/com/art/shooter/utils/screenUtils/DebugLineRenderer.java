@@ -1,6 +1,8 @@
 package com.art.shooter.utils.screenUtils;
 
 import com.art.shooter.chars.MainCharacter;
+import com.art.shooter.entities.ASimpleEntity;
+import com.art.shooter.entities.EntitySystem;
 import com.art.shooter.logic.API;
 import com.art.shooter.logic.CharacterManager;
 import com.art.shooter.utils.Utils;
@@ -8,6 +10,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
 
 public class DebugLineRenderer {
 
@@ -28,6 +31,15 @@ public class DebugLineRenderer {
         // end bounds
 
         final MainCharacter mainCharacter = API.get(CharacterManager.class).getMainCharacter();
+        final EntitySystem entitySystem = API.get(EntitySystem.class);
+        final Array<ASimpleEntity> entities = entitySystem.getEntities();
+        for (ASimpleEntity entity : entities) {
+//            final Rectangle boundingBox = entity.getBoundingBox();
+//            shapeRenderer.rect(boundingBox.getX(), boundingBox.getY(), boundingBox.getWidth(), boundingBox.getHeight());
+
+//            final Circle circle = entity.getColliderCircle();
+//            shapeRenderer.circle(circle.x, circle.y, circle.radius);
+        }
 
 //        circle
 //        final Circle colliderCircle = mainCharacter.getColliderCircle();

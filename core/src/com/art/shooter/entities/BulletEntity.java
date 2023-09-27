@@ -1,6 +1,7 @@
 package com.art.shooter.entities;
 
 import com.art.shooter.chars.ACharacter;
+import com.art.shooter.chars.MainCharacter;
 import com.art.shooter.logic.API;
 import com.art.shooter.logic.GameObject;
 import com.art.shooter.utils.CollisionDetector;
@@ -10,6 +11,7 @@ import com.art.shooter.utils.screenUtils.GridCell;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import lombok.Getter;
@@ -36,6 +38,8 @@ public class BulletEntity extends ASimpleEntity {
         final float originX = bulletSprite.getWidth() / 2.0f;
         final float originY = 0;
         bulletSprite.setOrigin(originX, originY);
+        boundingBox.setSize(bulletSprite.getWidth(), bulletSprite.getHeight());
+        colliderCircle.setRadius(Math.max(bulletSprite.getWidth(), bulletSprite.getHeight()) / 2f);
     }
 
 
@@ -72,16 +76,20 @@ public class BulletEntity extends ASimpleEntity {
             return;
         }
         this.currCell = grid.addEntityToCell(this);
+//        boundingBox.setPosition(pos);
+        colliderCircle.setPosition(pos);
+        checkForCollision();
     }
 
     public void checkForCollision () {
         if (this.currCell != null) {
             Array<GameObject> gameObjects = currCell.getGameObjects();
             for (GameObject gameObject : gameObjects) {
-                if (gameObject == this) continue;
-                boolean hit = CollisionDetector.bulletToCharacter(this, (ACharacter) gameObject);
+                if (!(gameObject instanceof ACharacter)) continue;
+                boolean hit = Intersector.overlaps(colliderCircle, gameObject.getBoundingBox());
                 if (hit) {
-                    System.out.println("another one bites a dust");
+                    ((ACharacter) gameObject).onHit(direction);
+                    System.out.println("hittt");
                 }
             }
         }
@@ -89,6 +97,7 @@ public class BulletEntity extends ASimpleEntity {
 
     @Override
     protected void remove() {
+        API.get(Grid.class).getCellAt(pos).remove(this);
         setFlaggedToRemove(true);
     }
 
