@@ -16,6 +16,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -56,6 +57,12 @@ public class ShooterGame extends ApplicationAdapter {
 		CharacterManager charManager = API.get(CharacterManager.class);
 		charManager.createCharacter(MainCharacter.class);
 		charManager.spawnEnemyAtRandom();
+
+		Pixmap pixmap = new Pixmap(Gdx.files.internal("crosshair.png"));
+		int xHotspot = pixmap.getWidth() / 2;
+		int yHotspot = pixmap.getHeight() / 2;
+		Gdx.graphics.setCursor(Gdx.graphics.newCursor(pixmap, xHotspot, yHotspot));
+		pixmap.dispose();
 	}
 
 	private void act (float delta) {

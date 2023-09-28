@@ -91,9 +91,10 @@ public class BulletEntity extends ASimpleEntity {
                 if (!(gameObject instanceof ACharacter)) continue;
                 boolean hit = Intersector.overlaps(colliderCircle, gameObject.getBoundingBox());
                 if (hit) {
-                    ((ACharacter) gameObject).onHit(direction, this.damage);
                     this.remove();
-                    System.out.println("hittt");
+                    ((ACharacter) gameObject).onHit(direction, this.damage);
+                    System.out.println("hit registerd");
+                    return;
                 }
             }
         }

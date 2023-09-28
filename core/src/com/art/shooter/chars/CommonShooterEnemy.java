@@ -1,5 +1,6 @@
 package com.art.shooter.chars;
 
+import com.art.shooter.entities.BloodEntity;
 import com.art.shooter.entities.BulletEntity;
 import com.art.shooter.entities.EntitySystem;
 import com.art.shooter.logic.API;
@@ -12,7 +13,9 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Pools;
 import lombok.Getter;
 
 public class CommonShooterEnemy extends AEnemy {
@@ -39,7 +42,7 @@ public class CommonShooterEnemy extends AEnemy {
     private void simulate (float delta) {
         lookAtMainCharacter();
         move(delta);
-        shootAtMainCharacter(delta);
+//        shootAtMainCharacter(delta);
     }
 
     private void move (float delta) {
@@ -52,16 +55,13 @@ public class CommonShooterEnemy extends AEnemy {
 
         if (distance > optimalDistance) {
             //get up close and personal
-            grid.removeEntityFromCell(this);
             pos.x += direction.x * speed * delta;
             pos.y += direction.y * speed * delta;
-            grid.addEntityToCell(this);
+
         } else {
             //create some distance
-            grid.removeEntityFromCell(this);
             pos.x -= direction.x * speed * delta;
             pos.y -= direction.y * speed * delta;
-            grid.addEntityToCell(this);
         }
         grid.removeEntityFromCellV2(this);
         boundingBox.setPosition(pos.x + 1, pos.y - 3);
@@ -123,20 +123,25 @@ public class CommonShooterEnemy extends AEnemy {
     @Override
     public void onHit(Vector2 direction, float damage) {
         hp -= damage;
-        System.out.println("hp is = " + hp);
         if (hp < 0) {
             remove();
-            System.out.println("fuck im dead oh noo ohhh");
             return;
         }
-        final float knockBackSpeed = 450f;
+        BloodEntity bloodEntity = API.get(EntitySystem.class).createEntity(BloodEntity.class);
+        Vector2 randomisedPos = this.pos.cpy();
+        randomisedPos.add(0, MathUtils.random(-10, 10));
+        bloodEntity.setPos(randomisedPos);
+        final float knockBackSpeed = 800f;
+        API.get(Grid.class).removeEntityFromCellV2(this);
         pos.x += direction.x * knockBackSpeed * Gdx.graphics.getDeltaTime();
-        pos.y += direction.y * knockBackSpeed * Gdx.graphics.getDeltaTime();;
+        pos.y += direction.y * knockBackSpeed * Gdx.graphics.getDeltaTime();
+        API.get(Grid.class).addEntityToCellV2(this);
     }
 
     @Override
     public void remove() {
         setFlaggedToRemove(true);
+        API.get(Grid.class).removeEntityFromCellV2(this);
     }
 
     @Override

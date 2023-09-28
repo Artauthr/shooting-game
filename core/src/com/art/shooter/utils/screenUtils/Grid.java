@@ -69,6 +69,7 @@ public class Grid {
         return tmp;
     }
 
+    @Deprecated
     public Array<GridCell> getCellsAt (Circle colliderCircle) {
         tmp.clear();
         GridCell centerCell = getCellAt(colliderCircle.x, colliderCircle.y);
@@ -95,7 +96,7 @@ public class Grid {
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setProjectionMatrix(Utils.camera.combined);
-        shapeRenderer.setColor(1, 1, 1, 0.23f);
+        shapeRenderer.setColor(1, 1, 1, 0.15f);
 
 
         for (int i = 0; i < cells.length; i++) {
