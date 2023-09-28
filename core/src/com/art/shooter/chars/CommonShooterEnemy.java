@@ -126,6 +126,7 @@ public class CommonShooterEnemy extends AEnemy {
         BloodEntity bloodEntity = API.get(EntitySystem.class).createEntity(BloodEntity.class);
         Vector2 randomisedPos = this.pos.cpy();
         randomisedPos.add(0, MathUtils.random(-10, 10));
+        bloodEntity.setRotation(MathUtils.random(0, 360));
         bloodEntity.setPos(randomisedPos);
         final float knockBackSpeed = 800f;
         API.get(Grid.class).removeEntityByRect(this);

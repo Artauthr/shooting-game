@@ -62,10 +62,6 @@ public class EntitySystem implements Disposable {
         entities.clear();
     }
 
-    public void forceRemove (ASimpleEntity entity) {
-        entities.removeValue(entity, false);
-    }
-
     @Override
     public void dispose() {
         for (ASimpleEntity entity : toDispose) {

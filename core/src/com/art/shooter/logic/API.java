@@ -4,6 +4,7 @@ import com.art.shooter.entities.EntitySystem;
 import com.art.shooter.ui.GameUI;
 import com.art.shooter.utils.screenUtils.DebugLineRenderer;
 import com.art.shooter.utils.screenUtils.Grid;
+import com.art.shooter.utils.screenUtils.MovementGrid;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
@@ -33,6 +34,7 @@ public class API {
         register(Grid.class);
         register(GameLogic.class);
         register(DebugLineRenderer.class);
+        register(MovementGrid.class);
     }
 
     public static <T> T get (Class<T> clazz) {

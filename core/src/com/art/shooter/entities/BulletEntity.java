@@ -17,8 +17,10 @@ import lombok.Setter;
 
 public class BulletEntity extends ASimpleEntity {
     private Sprite bulletSprite;
+
     @Setter
     private float rotation;
+
     @Getter @Setter
     private Vector2 pos;
     @Setter

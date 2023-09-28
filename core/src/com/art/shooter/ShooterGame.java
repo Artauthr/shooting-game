@@ -11,6 +11,7 @@ import com.art.shooter.ui.GameUI;
 import com.art.shooter.utils.screenUtils.DebugLineRenderer;
 import com.art.shooter.utils.Utils;
 import com.art.shooter.utils.screenUtils.Grid;
+import com.art.shooter.utils.screenUtils.MovementGrid;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -85,6 +86,7 @@ public class ShooterGame extends ApplicationAdapter {
 
 		API.get(DebugLineRenderer.class).draw(shapeRenderer);
 		API.get(Grid.class).renderDebug(shapeRenderer);
+//		API.get(MovementGrid.class).renderDebug(shapeRenderer);
 	}
 
 	@Override
