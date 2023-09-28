@@ -1,6 +1,7 @@
 package com.art.shooter.ui;
 
 import com.art.shooter.chars.ACharacter;
+import com.art.shooter.logic.API;
 import com.art.shooter.utils.Utils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -23,7 +24,12 @@ public class GameUI {
     private Stage stage;
     private Table rootUI;
     private boolean initialized = false;
-    private BitmapFont font;
+
+    @Getter
+    private final BitmapFont font;
+
+    @Getter
+    private final Label.LabelStyle regularLabelStyle;
     private Array<ACharacter> trackedCharacters = new Array<>();
 
     public GameUI(Viewport viewport, Batch batch) {
@@ -37,7 +43,14 @@ public class GameUI {
         stage.addActor(rootUI);
 
         font = new BitmapFont();
+        regularLabelStyle = new Label.LabelStyle(font, Color.WHITE);
     }
+
+    public static GameUI get() {
+        return API.get(GameUI.class);
+    }
+
+
 
     public void onResize () {
         stage.getViewport().update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
