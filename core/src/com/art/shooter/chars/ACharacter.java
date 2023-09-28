@@ -22,6 +22,10 @@ public abstract class ACharacter extends GameObject {
     public abstract void draw(Batch batch);
     public abstract void remove();
     public abstract void dispose();
-    public void onHit() {}
-    public void onHit(Vector2 direction, float damage) {}
+    public void onHit() {
+
+    }
+    public void onHit(Vector2 direction, float damage) {
+
+    }
 }

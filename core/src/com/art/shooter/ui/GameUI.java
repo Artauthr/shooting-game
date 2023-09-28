@@ -1,6 +1,7 @@
 package com.art.shooter.ui;
 
 import com.art.shooter.chars.ACharacter;
+import com.art.shooter.logic.API;
 import com.art.shooter.utils.Utils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -22,16 +23,16 @@ public class GameUI {
     @Getter
     private Stage stage;
     private Table rootUI;
-    private static GameUI instance;
-    private boolean initialized;
-    private BitmapFont font;
-    private Label.LabelStyle labelStyle;
+    private boolean initialized = false;
+
+    @Getter
+    private final BitmapFont font;
+
+    @Getter
+    private final Label.LabelStyle regularLabelStyle;
     private Array<ACharacter> trackedCharacters = new Array<>();
 
-    private Table positionalLabelHolder;
-
     public GameUI(Viewport viewport, Batch batch) {
-        initialized = false;
         stage = new Stage(viewport, batch);
 
         rootUI = new Table();
@@ -42,24 +43,13 @@ public class GameUI {
         stage.addActor(rootUI);
 
         font = new BitmapFont();
-        labelStyle = new Label.LabelStyle(font, Color.WHITE);
+        regularLabelStyle = new Label.LabelStyle(font, Color.WHITE);
     }
 
-
-
-    public void init () {
-        if (initialized) return;
-
-        for (ACharacter trackedCharacter : trackedCharacters) {
-            Label xPosLabel = new Label("x", labelStyle);
-            Label yPosLabel = new Label("y", labelStyle);
-            final Table posTable = new Table();
-            rootUI.add(posTable);
-            System.out.println("Pos table added");
-        }
-
-        initialized = true;
+    public static GameUI get() {
+        return API.get(GameUI.class);
     }
+
 
 
     public void onResize () {

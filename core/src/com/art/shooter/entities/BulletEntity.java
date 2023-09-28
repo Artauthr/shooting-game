@@ -1,10 +1,8 @@
 package com.art.shooter.entities;
 
 import com.art.shooter.chars.ACharacter;
-import com.art.shooter.chars.MainCharacter;
 import com.art.shooter.logic.API;
 import com.art.shooter.logic.GameObject;
-import com.art.shooter.utils.CollisionDetector;
 import com.art.shooter.utils.Utils;
 import com.art.shooter.utils.screenUtils.Grid;
 import com.art.shooter.utils.screenUtils.GridCell;
@@ -19,8 +17,10 @@ import lombok.Setter;
 
 public class BulletEntity extends ASimpleEntity {
     private Sprite bulletSprite;
+
     @Setter
     private float rotation;
+
     @Getter @Setter
     private Vector2 pos;
     @Setter
@@ -66,7 +66,7 @@ public class BulletEntity extends ASimpleEntity {
             return;
         }
         final Grid grid = API.get(Grid.class);
-        grid.removeEntityFromCell(this);
+        grid.removeEntityByPosition(this);
         pos.x += direction.x * speed * delta;
         pos.y += direction.y * speed * delta;
 
@@ -78,7 +78,7 @@ public class BulletEntity extends ASimpleEntity {
             setFlaggedToRemove(true);
             return;
         }
-        this.currCell = grid.addEntityToCell(this);
+        this.currCell = grid.addEntityByPosition(this);
 //        boundingBox.setPosition(pos);
         colliderCircle.setPosition(pos);
         checkForCollision();
@@ -91,9 +91,10 @@ public class BulletEntity extends ASimpleEntity {
                 if (!(gameObject instanceof ACharacter)) continue;
                 boolean hit = Intersector.overlaps(colliderCircle, gameObject.getBoundingBox());
                 if (hit) {
-                    ((ACharacter) gameObject).onHit(direction, this.damage);
                     this.remove();
-                    System.out.println("hittt");
+                    ((ACharacter) gameObject).onHit(direction, this.damage);
+                    System.out.println("hit registerd");
+                    return;
                 }
             }
         }

@@ -10,8 +10,6 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.OrderedSet;
-import com.badlogic.gdx.utils.SnapshotArray;
 
 // the griddy
 public class Grid {
@@ -69,6 +67,7 @@ public class Grid {
         return tmp;
     }
 
+    @Deprecated
     public Array<GridCell> getCellsAt (Circle colliderCircle) {
         tmp.clear();
         GridCell centerCell = getCellAt(colliderCircle.x, colliderCircle.y);
@@ -89,13 +88,13 @@ public class Grid {
         return tmp;
     }
 
-    public void debug (ShapeRenderer shapeRenderer) {
+    public void renderDebug (ShapeRenderer shapeRenderer) {
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setProjectionMatrix(Utils.camera.combined);
-        shapeRenderer.setColor(1, 1, 1, 0.23f);
+        shapeRenderer.setColor(1, 1, 1, 0.15f);
 
 
         for (int i = 0; i < cells.length; i++) {
@@ -104,7 +103,9 @@ public class Grid {
                 final float cellCenterY = i * cellSize;
                 final GridCell gridCell = cells[i][j];
                 if (gridCell.getGameObjects().size > 0) {
-                    shapeRenderer.rect(cellCenterX, cellCenterY, cellSize, cellSize, Color.GREEN,Color.GREEN,Color.GREEN,Color.GREEN);
+                    Color greenTransparent = Color.GREEN;
+                    greenTransparent.a = 0.57f;
+                    shapeRenderer.rect(cellCenterX, cellCenterY, cellSize, cellSize, greenTransparent, greenTransparent, greenTransparent, greenTransparent);
                 } else {
                     shapeRenderer.rect(cellCenterX, cellCenterY, cellSize, cellSize);
                 }
@@ -116,6 +117,33 @@ public class Grid {
         Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 
+    public GridCell addEntityByPosition (GameObject gameObject) {
+        GridCell cell = getCellAt(gameObject.getPos());
+        cell.getGameObjects().add(gameObject);
+        return cell;
+    }
+
+    public void removeEntityByPosition (GameObject gameObject) {
+        getCellAt(gameObject.getPos()).getGameObjects().removeValue(gameObject, false);
+    }
+
+
+    public void addEntityByRect (GameObject gameObject) {
+        Rectangle boundingBox = gameObject.getBoundingBox();
+        Array<GridCell> cellsToAdd = getCellsAtRect(boundingBox);
+        for (GridCell gridCell : cellsToAdd) {
+            gridCell.add(gameObject);
+        }
+    }
+
+    public void removeEntityByRect (GameObject gameObject) {
+        Array<GridCell> cellsToRemoveFrom = getCellsAtRect(gameObject.getBoundingBox());
+        for (GridCell gridCell : cellsToRemoveFrom) {
+            gridCell.remove(gameObject);
+        }
+    }
+
+
     public void printNumOfOccupiedCells () {
         int count = 0;
         for (GridCell[] cell : cells) {
@@ -126,32 +154,6 @@ public class Grid {
             }
         }
         System.out.println("Occupied Cells " + count);
-    }
-
-
-    public GridCell addEntityToCell (GameObject gameObject) {
-        GridCell cell = getCellAt(gameObject.getPos());
-        cell.getGameObjects().add(gameObject);
-        return cell;
-    }
-
-    public void addEntityToCellV2 (GameObject gameObject) {
-        Rectangle boundingBox = gameObject.getBoundingBox();
-        Array<GridCell> cellsToAdd = getCellsAtRect(boundingBox);
-        for (GridCell gridCell : cellsToAdd) {
-            gridCell.add(gameObject);
-        }
-    }
-
-    public void removeEntityFromCellV2 (GameObject gameObject) {
-        Array<GridCell> cellsToRemoveFrom = getCellsAtRect(gameObject.getBoundingBox());
-        for (GridCell gridCell : cellsToRemoveFrom) {
-            gridCell.remove(gameObject);
-        }
-    }
-
-    public void removeEntityFromCell (GameObject gameObject) {
-        getCellAt(gameObject.getPos()).getGameObjects().removeValue(gameObject, false);
     }
 
 

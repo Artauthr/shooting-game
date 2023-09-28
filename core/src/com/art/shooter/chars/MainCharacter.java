@@ -4,7 +4,6 @@ import com.art.shooter.entities.BulletEntity;
 import com.art.shooter.entities.EntitySystem;
 
 import com.art.shooter.logic.API;
-import com.art.shooter.ui.GameUI;
 import com.art.shooter.utils.Utils;
 import com.art.shooter.utils.screenUtils.Grid;
 import com.art.shooter.utils.screenUtils.GridCell;
@@ -15,7 +14,6 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -75,7 +73,7 @@ public class MainCharacter extends ACharacter {
         return direction;
     }
 
-    private void lookAtCursor (float delta) {
+    private void lookAtCursor () {
         characterSprite.setRotation(getAngle());
     }
 
@@ -96,70 +94,57 @@ public class MainCharacter extends ACharacter {
         entity.setDirection(direction);
         entity.setRotation(angle);
         entity.setDamage(1);
+
+        //move back from recoil
+        Vector2 backward = direction.cpy();
+        backward.scl(-1); //reverse the direction
+        moveWithCellUpdate(backward.x, backward.y, 3);
     }
 
     public void update (float delta) {
-        lookAtCursor(delta);
+        lookAtCursor();
         handleInput(delta);
     }
 
     public void handleInput (float delta) {
+        float deltaX = 0;
+        float deltaY = 0;
+
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            if (pos.y + velY * delta < Utils.camera.viewportHeight) {
-                final Grid grid = API.get(Grid.class);
-//                grid.removeEntityFromCell(this);
-                pos.y += velY * delta;
-//                grid.addEntityToCell(this);
-            } else {
-                pos.y = Utils.camera.viewportHeight;
-            }
+            deltaY += velY * delta;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            if (pos.y - velY * delta >= 0) {
-                final Grid grid = API.get(Grid.class);
-//                grid.removeEntityFromCell(this);
-                pos.y -= velY * delta;
-//                grid.addEntityToCell(this);
-            } else {
-                pos.y = 0;
-            }
+            deltaY -= velY * delta;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            if (pos.x + velX * delta < Utils.camera.viewportWidth) {
-                final Grid grid = API.get(Grid.class);
-//                grid.removeEntityFromCell(this);
-                pos.x += velX * delta;
-//                grid.addEntityToCell(this);
-            } else {
-                pos.x = Utils.camera.viewportWidth;
-            }
+            deltaX += velX * delta;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            if (pos.x - velX * delta >= 0) {
-                final Grid grid = API.get(Grid.class);
-//                grid.removeEntityFromCell(this);
-                pos.x -= velX * delta;
-//                grid.addEntityToCell(this);
-            } else {
-                pos.x = 0;
-            }
+            deltaX -= velX * delta;
         }
-        final Grid grid = API.get(Grid.class);
-        grid.removeEntityFromCellV2(this);
-        boundingBox.setPosition(pos.x + 1, pos.y - 3);
-        grid.addEntityToCellV2(this);
 
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
             shoot();
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-            dash(getDirection(), delta);
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.V)) {
-            System.out.println("pos.toString() = " + pos.toString());
-            System.out.println("colliderBOX X= " + colliderCircle.x);
-            System.out.println("colliderBOX Y= " + colliderCircle.y);
-        }
+        moveWithCellUpdate(deltaX, deltaY);
+    }
+
+    private void moveWithCellUpdate (float deltaX, float deltaY) {
+        moveWithCellUpdate(deltaX, deltaY, 1);
+    }
+
+    private void moveWithCellUpdate (float deltaX, float deltaY, float multiplier) {
+        final Grid grid = API.get(Grid.class);
+
+        if (pos.x + deltaX < 0) deltaX = 0;
+        if (pos.x + deltaX > Utils.camera.viewportWidth) deltaX = 0;
+        if (pos.y + deltaY < 0) deltaY = 0;
+        if (pos.y + deltaY > Utils.camera.viewportHeight) deltaY = 0;
+
+        grid.removeEntityByRect(this);
+        pos.add(deltaX * multiplier, deltaY * multiplier);
+        boundingBox.setPosition(pos.x + 1, pos.y - 3);
+        grid.addEntityByRect(this);
     }
 
     private void dash (Vector2 direction, float delta) {

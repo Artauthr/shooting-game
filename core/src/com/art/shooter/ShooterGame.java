@@ -1,6 +1,5 @@
 package com.art.shooter;
 
-import com.art.shooter.chars.CommonShooterEnemy;
 import com.art.shooter.chars.MainCharacter;
 import com.art.shooter.entities.EntitySystem;
 import com.art.shooter.logic.API;
@@ -12,26 +11,22 @@ import com.art.shooter.ui.GameUI;
 import com.art.shooter.utils.screenUtils.DebugLineRenderer;
 import com.art.shooter.utils.Utils;
 import com.art.shooter.utils.screenUtils.Grid;
+import com.art.shooter.utils.screenUtils.MovementGrid;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class ShooterGame extends ApplicationAdapter {
 	private PolygonSpriteBatch batch;
 	private ShapeRenderer shapeRenderer;
-	private float tmpTimer = 5f;
-	private float tmpTimer2 = 2f;
-	private int enemyCount = 1;
-	private int enemyCounter = 0;
 	private GameUI gameUI;
 	private OrthographicCamera camera;
-	private DebugLineRenderer debugRenderer;
 	
 	@Override
 	public void create () {
@@ -44,21 +39,26 @@ public class ShooterGame extends ApplicationAdapter {
 		camera.update();
 		Utils.camera = camera;
 
-		debugRenderer = new DebugLineRenderer();
-
 		API.getInstance().init();
 		gameUI = new GameUI(new ScreenViewport(), batch);
 		API.register(gameUI);
-
 		Gdx.input.setInputProcessor(new CustomInputProcessor());
 
 
 		CharacterManager charManager = API.get(CharacterManager.class);
 		charManager.createCharacter(MainCharacter.class);
 		charManager.spawnEnemyAtRandom();
+
+
+		//set up cursor
+		Pixmap pixmap = new Pixmap(Gdx.files.internal("crosshair.png"));
+		int xHotspot = pixmap.getWidth() / 2;
+		int yHotspot = pixmap.getHeight() / 2;
+		Gdx.graphics.setCursor(Gdx.graphics.newCursor(pixmap, xHotspot, yHotspot));
+		pixmap.dispose();
 	}
 
-	private void act (float delta) {
+	private void actUI () {
 		gameUI.act();
 	}
 
@@ -68,13 +68,9 @@ public class ShooterGame extends ApplicationAdapter {
 
 		ScreenUtils.clear(ColorLibrary.CHARCOAL_GRAY.getColor());
 
-		tmpTimer += deltaTime;
-		tmpTimer2 += deltaTime;
-
 		batch.setProjectionMatrix(camera.combined);
 
-		batch.begin();
-
+		batch.begin(); //main systems batch
 		API.get(EntitySystem.class).drawEntities(batch);
 		API.get(CharacterManager.class).drawCharacters(batch);
 
@@ -82,25 +78,26 @@ public class ShooterGame extends ApplicationAdapter {
 			API.get(CharacterManager.class).updateCharacters(deltaTime);
 			API.get(EntitySystem.class).updateEntities(deltaTime);
 		}
-
 		batch.end();
 
-		act(deltaTime);
-		gameUI.draw();
+		//ui related
+//		actUI();
+//		gameUI.draw();
 
-		debugRenderer.draw(shapeRenderer);
-
-		API.get(Grid.class).debug(shapeRenderer);
-
+		API.get(DebugLineRenderer.class).draw(shapeRenderer);
+		API.get(Grid.class).renderDebug(shapeRenderer);
+//		API.get(MovementGrid.class).renderDebug(shapeRenderer);
 	}
 
-	
+	@Override
+	public void resize(int width, int height) {
+		API.get(GameUI.class).onResize();
+	}
+
 	@Override
 	public void dispose () {
 		batch.dispose();
 		shapeRenderer.dispose();
 		API.dispose();
 	}
-
-
 }

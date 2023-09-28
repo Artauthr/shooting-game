@@ -22,21 +22,30 @@ public class EntitySystem implements Disposable {
         entity.create();
         entities.add(entity);
         toDispose.add(entity);
+        System.out.println("created " + clazz.getSimpleName());
         return entity;
     }
 
+    private float timer = 0f;
+
     public void updateEntities (float delta) {
+        timer += delta;
         Array.ArrayIterator<ASimpleEntity> iterator = entities.iterator();
         while (iterator.hasNext()) {
             ASimpleEntity next = iterator.next();
             if (next.isFlaggedToRemove()) {
                 Pools.free(next);
                 iterator.remove();
+                System.out.println("Removed - " + next.getClass().getSimpleName());
             }
         }
 
         for (ASimpleEntity entity : entities) {
             entity.update(delta);
+        }
+        if (timer > 5f) {
+            System.out.println("Alive entities = " + entities.size);
+            timer = 0f;
         }
     }
 
