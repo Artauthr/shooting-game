@@ -4,7 +4,6 @@ import com.art.shooter.entities.BulletEntity;
 import com.art.shooter.entities.EntitySystem;
 
 import com.art.shooter.logic.API;
-import com.art.shooter.ui.GameUI;
 import com.art.shooter.utils.Utils;
 import com.art.shooter.utils.screenUtils.Grid;
 import com.art.shooter.utils.screenUtils.GridCell;
@@ -15,7 +14,6 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -143,10 +141,10 @@ public class MainCharacter extends ACharacter {
         if (pos.y + deltaY < 0) deltaY = 0;
         if (pos.y + deltaY > Utils.camera.viewportHeight) deltaY = 0;
 
-        grid.removeEntityFromCellV2(this);
+        grid.removeEntityByRect(this);
         pos.add(deltaX * multiplier, deltaY * multiplier);
         boundingBox.setPosition(pos.x + 1, pos.y - 3);
-        grid.addEntityToCellV2(this);
+        grid.addEntityByRect(this);
     }
 
     private void dash (Vector2 direction, float delta) {

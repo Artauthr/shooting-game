@@ -22,16 +22,11 @@ public class GameUI {
     @Getter
     private Stage stage;
     private Table rootUI;
-    private static GameUI instance;
-    private boolean initialized;
+    private boolean initialized = false;
     private BitmapFont font;
-    private Label.LabelStyle labelStyle;
     private Array<ACharacter> trackedCharacters = new Array<>();
 
-    private Table positionalLabelHolder;
-
     public GameUI(Viewport viewport, Batch batch) {
-        initialized = false;
         stage = new Stage(viewport, batch);
 
         rootUI = new Table();
@@ -42,25 +37,7 @@ public class GameUI {
         stage.addActor(rootUI);
 
         font = new BitmapFont();
-        labelStyle = new Label.LabelStyle(font, Color.WHITE);
     }
-
-
-
-    public void init () {
-        if (initialized) return;
-
-        for (ACharacter trackedCharacter : trackedCharacters) {
-            Label xPosLabel = new Label("x", labelStyle);
-            Label yPosLabel = new Label("y", labelStyle);
-            final Table posTable = new Table();
-            rootUI.add(posTable);
-            System.out.println("Pos table added");
-        }
-
-        initialized = true;
-    }
-
 
     public void onResize () {
         stage.getViewport().update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);

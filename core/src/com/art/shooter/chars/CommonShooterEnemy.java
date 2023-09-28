@@ -12,11 +12,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Pools;
-import lombok.Getter;
 
 public class CommonShooterEnemy extends AEnemy {
     private float shootCooldownTimer;
@@ -63,9 +59,9 @@ public class CommonShooterEnemy extends AEnemy {
             pos.x -= direction.x * speed * delta;
             pos.y -= direction.y * speed * delta;
         }
-        grid.removeEntityFromCellV2(this);
+        grid.removeEntityByRect(this);
         boundingBox.setPosition(pos.x + 1, pos.y - 3);
-        grid.addEntityToCellV2(this);
+        grid.addEntityByRect(this);
     }
 
     private void shootAtMainCharacter (float delta) {
@@ -132,16 +128,16 @@ public class CommonShooterEnemy extends AEnemy {
         randomisedPos.add(0, MathUtils.random(-10, 10));
         bloodEntity.setPos(randomisedPos);
         final float knockBackSpeed = 800f;
-        API.get(Grid.class).removeEntityFromCellV2(this);
+        API.get(Grid.class).removeEntityByRect(this);
         pos.x += direction.x * knockBackSpeed * Gdx.graphics.getDeltaTime();
         pos.y += direction.y * knockBackSpeed * Gdx.graphics.getDeltaTime();
-        API.get(Grid.class).addEntityToCellV2(this);
+        API.get(Grid.class).addEntityByRect(this);
     }
 
     @Override
     public void remove() {
         setFlaggedToRemove(true);
-        API.get(Grid.class).removeEntityFromCellV2(this);
+        API.get(Grid.class).removeEntityByRect(this);
     }
 
     @Override

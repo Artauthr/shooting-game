@@ -9,8 +9,6 @@ public class Utils {
     public static Viewport UIViewPort;
     public static ExtendViewport mainViewport;
     public static OrthographicCamera camera;
-    public static final float PPM = 50.0f; //pixels per meter, use this instead of pixel measurement
-
     public static float getDistanceBetweenTwoVectors (Vector2 v1, Vector2 v2) {
         if (v1 == null || v2 == null) {
             throw new IllegalArgumentException("Vectors must not be null");
