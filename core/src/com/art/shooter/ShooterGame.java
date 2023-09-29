@@ -8,6 +8,7 @@ import com.art.shooter.logic.CustomInputProcessor;
 import com.art.shooter.logic.GameLogic;
 import com.art.shooter.ui.ColorLibrary;
 import com.art.shooter.ui.GameUI;
+import com.art.shooter.utils.Resources;
 import com.art.shooter.utils.screenUtils.DebugLineRenderer;
 import com.art.shooter.utils.Utils;
 import com.art.shooter.utils.screenUtils.Grid;
@@ -56,6 +57,9 @@ public class ShooterGame extends ApplicationAdapter {
 		int yHotspot = pixmap.getHeight() / 2;
 		Gdx.graphics.setCursor(Gdx.graphics.newCursor(pixmap, xHotspot, yHotspot));
 		pixmap.dispose();
+
+		//resources
+		API.get(Resources.class).queueLoading();
 	}
 
 	private void actUI () {
@@ -65,6 +69,12 @@ public class ShooterGame extends ApplicationAdapter {
 	@Override
 	public void render () {
 		float deltaTime = Gdx.graphics.getDeltaTime();
+
+		final Resources resources = API.get(Resources.class);
+		if (!resources.isLoaded()) {
+			resources.updateLoading();
+			return;
+		}
 
 		ScreenUtils.clear(ColorLibrary.CHARCOAL_GRAY.getColor());
 

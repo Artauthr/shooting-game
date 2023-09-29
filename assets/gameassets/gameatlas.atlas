@@ -1,41 +1,78 @@
 
 gameatlas.png
-size: 512, 512
+size: 512, 128
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
-badlogic
-  rotate: false
-  xy: 2, 30
-  size: 256, 256
-  orig: 256, 256
-  offset: 0, 0
-  index: -1
-blood
-  rotate: false
-  xy: 2, 2
-  size: 8, 8
-  orig: 8, 8
-  offset: 0, 0
-  index: 1
-bullet
-  rotate: false
-  xy: 20, 20
-  size: 2, 8
-  orig: 2, 8
-  offset: 0, 0
-  index: -1
-enemy
+ui-white-pixel
   rotate: false
   xy: 2, 12
-  size: 16, 16
-  orig: 16, 16
+  size: 10, 10
+  split: 3, 3, 3, 3
+  pad: 0, 0, 0, 0
+  orig: 10, 10
   offset: 0, 0
   index: -1
-shooter
+ui-white-squircle-15
   rotate: false
-  xy: 260, 270
-  size: 16, 16
-  orig: 16, 16
+  xy: 190, 2
+  size: 50, 50
+  split: 25, 24, 21, 27
+  pad: 0, 0, 0, 0
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
+ui-white-squircle-19
+  rotate: false
+  xy: 362, 88
+  size: 44, 38
+  split: 20, 20, 17, 18
+  pad: 0, 0, 0, 0
+  orig: 44, 38
+  offset: 0, 0
+  index: -1
+ui-white-squircle-20
+  rotate: false
+  xy: 318, 84
+  size: 42, 42
+  split: 20, 19, 20, 20
+  pad: 0, 0, 0, 0
+  orig: 42, 42
+  offset: 0, 0
+  index: -1
+ui-white-squircle-25
+  rotate: false
+  xy: 264, 74
+  size: 52, 52
+  split: 25, 25, 25, 25
+  pad: 0, 0, 0, 0
+  orig: 52, 52
+  offset: 0, 0
+  index: -1
+ui-white-squircle-35
+  rotate: false
+  xy: 190, 54
+  size: 72, 72
+  split: 36, 35, 35, 36
+  pad: 0, 0, 0, 0
+  orig: 72, 72
+  offset: 0, 0
+  index: -1
+ui-white-squircle-40
+  rotate: false
+  xy: 106, 44
+  size: 82, 82
+  split: 38, 41, 39, 41
+  pad: 0, 0, 0, 0
+  orig: 82, 82
+  offset: 0, 0
+  index: -1
+ui-white-squircle-50
+  rotate: false
+  xy: 2, 24
+  size: 102, 102
+  split: 50, 50, 51, 50
+  pad: 0, 0, 0, 0
+  orig: 102, 102
   offset: 0, 0
   index: -1

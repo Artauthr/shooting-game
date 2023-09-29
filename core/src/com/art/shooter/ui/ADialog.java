@@ -23,11 +23,10 @@ public abstract class ADialog extends Table {
         return titleSegment;
     }
 
-    private Table constructOverlay () {
-        final Table overlayTable = new Table();
-        overlayTable.
-    }
-    public
+//    private Table constructOverlay () {
+//        final Table overlayTable = new Table();
+//        overlayTable.?
+//    }
 
     protected String getDialogTitle () {
         return "Title";

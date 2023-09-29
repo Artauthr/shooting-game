@@ -4,6 +4,7 @@ import com.art.shooter.entities.BulletEntity;
 import com.art.shooter.entities.EntitySystem;
 
 import com.art.shooter.logic.API;
+import com.art.shooter.utils.Resources;
 import com.art.shooter.utils.Utils;
 import com.art.shooter.utils.screenUtils.Grid;
 import com.art.shooter.utils.screenUtils.GridCell;
@@ -17,6 +18,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 
 public class MainCharacter extends ACharacter {

@@ -81,10 +81,10 @@ public class BulletEntity extends ASimpleEntity {
         this.currCell = grid.addEntityByPosition(this);
 //        boundingBox.setPosition(pos);
         colliderCircle.setPosition(pos);
-        checkForCollision();
+        checkForCollision(delta);
     }
 
-    public void checkForCollision () {
+    public void checkForCollision (float delta) {
         if (this.currCell != null) {
             Array<GameObject> gameObjects = currCell.getGameObjects();
             for (GameObject gameObject : gameObjects) {
@@ -92,8 +92,8 @@ public class BulletEntity extends ASimpleEntity {
                 boolean hit = Intersector.overlaps(colliderCircle, gameObject.getBoundingBox());
                 if (hit) {
                     this.remove();
-                    ((ACharacter) gameObject).onHit(direction, this.damage);
-                    System.out.println("hit registerd");
+                    ((ACharacter) gameObject).onHit(delta, direction, this.damage);
+                    System.out.println("hit registered");
                     return;
                 }
             }

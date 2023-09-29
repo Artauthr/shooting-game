@@ -9,6 +9,6 @@ public class PausedView extends Table {
         this.setFillParent(true);
         final FileHandle fileHandle = Gdx.files.internal("ui-white-pixel.9.png");
 
-        this.setBackground(internal);
+//        this.setBackground(internal);
     }
 }

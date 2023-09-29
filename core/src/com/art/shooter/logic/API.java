@@ -2,6 +2,7 @@ package com.art.shooter.logic;
 
 import com.art.shooter.entities.EntitySystem;
 import com.art.shooter.ui.GameUI;
+import com.art.shooter.utils.Resources;
 import com.art.shooter.utils.screenUtils.DebugLineRenderer;
 import com.art.shooter.utils.screenUtils.Grid;
 import com.art.shooter.utils.screenUtils.MovementGrid;
@@ -29,6 +30,7 @@ public class API {
 
     public void init () {
         //add API-s here
+        register(Resources.class);
         register(CharacterManager.class);
         register(EntitySystem.class);
         register(Grid.class);

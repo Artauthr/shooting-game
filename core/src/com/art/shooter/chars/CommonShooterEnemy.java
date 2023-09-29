@@ -117,7 +117,7 @@ public class CommonShooterEnemy extends AEnemy {
     }
 
     @Override
-    public void onHit(Vector2 direction, float damage) {
+    public void onHit(float delta, Vector2 direction, float damage) {
         hp -= damage;
         if (hp < 0) {
             remove();
