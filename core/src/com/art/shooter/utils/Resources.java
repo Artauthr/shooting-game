@@ -2,8 +2,8 @@ package com.art.shooter.utils;
 
 import com.art.shooter.logic.API;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.ObjectMap;
@@ -47,8 +47,17 @@ public class Resources {
     }
 
     public static Drawable obtainDrawable (String region) {
+        return obtainDrawable(region, Color.WHITE);
+    }
+
+    public static Drawable obtainDrawable (String region, Color color) {
         final Resources resources = API.get(Resources.class);
-        final Drawable drawable = resources.uiSkin.newDrawable(region);
+
+        if (resources.drawableCache.containsKey(region)) {
+            return resources.drawableCache.get(region);
+        }
+
+        final Drawable drawable = resources.uiSkin.newDrawable(region, color);
         resources.drawableCache.put(region, drawable);
         return drawable;
     }

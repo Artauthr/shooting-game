@@ -68,11 +68,56 @@ project(":android") {
 }
 
 import com.badlogic.gdx.tools.texturepacker.TexturePacker
+
+import java.util.regex.Matcher
+import java.util.regex.Pattern
+
 task packGameTextures() {
     doFirst {
         TexturePacker.processIfModified("rawUI", "assets/gameassets", "gameatlas")
     }
 }
+
+task generateSquircles {
+    doLast {
+        File folder = new File('rawUI/squircles')
+        StringBuilder enumConstants = new StringBuilder()
+
+        if (folder.exists() && folder.isDirectory()) {
+            folder.eachFile { file ->
+                def name = file.name
+                Pattern pattern = Pattern.compile("-(\\d+)\\.\\d+");
+                Matcher matcher = pattern.matcher(name);
+                String extractedNumber;
+
+                if (matcher.find()) {
+                    extractedNumber = matcher.group(1);
+                    String enumConstant = "SQUIRCLE_" + extractedNumber + "(" + extractedNumber + ")"
+                    enumConstants.append("    ${enumConstant},\n")
+                } else {
+                    println "Wrong filename, aborting"
+                }
+            }
+            enumConstants.append(";")
+
+            File enumFile = new File('core/src/com/art/shooter/ui/Squircle.java')
+            String enumContent = enumFile.text
+
+            // Replace the placeholder
+            enumContent = enumContent.replaceAll(
+                    "(?<=// BEGIN-ENUM-CONSTANTS\\n).*?(?=\\n\\s*// END-ENUM-CONSTANTS)",
+                    enumConstants.toString()
+            )
+
+            enumFile.text = enumContent
+        } else {
+            println "The specified path either does not exist or is not a directory."
+        }
+    }
+}
+
+
+
 
 
 project(":core") {

@@ -10,6 +10,7 @@ public class BloodEntity extends ASimpleEntity {
     private Sprite bloodSprite;
     private final float lifeTime = 4f;
     private float timer = 0f;
+    private float alphaModulation = 1f;
 
     @Setter
     private float rotation;
@@ -23,6 +24,7 @@ public class BloodEntity extends ASimpleEntity {
     @Override
     protected void update(float delta) {
         timer += delta;
+        alphaModulation -= delta / lifeTime;
         if (timer > lifeTime) remove();
     }
 
@@ -40,7 +42,7 @@ public class BloodEntity extends ASimpleEntity {
     protected void draw(Batch batch) {
         bloodSprite.setPosition(pos.x, pos.y);
         bloodSprite.setRotation(rotation);
-        bloodSprite.draw(batch);
+        bloodSprite.draw(batch, alphaModulation);
     }
 
     @Override
@@ -51,6 +53,7 @@ public class BloodEntity extends ASimpleEntity {
     @Override
     public void reset() {
         timer = 0;
+        alphaModulation = 1f;
         setFlaggedToRemove(false);
     }
 }

@@ -1,19 +1,32 @@
 
 gameatlas.png
-size: 512, 128
+size: 128, 128
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
+ui-close-icon
+  rotate: false
+  xy: 2, 14
+  size: 87, 87
+  orig: 87, 87
+  offset: 0, 0
+  index: -1
 ui-white-pixel
   rotate: false
-  xy: 2, 12
+  xy: 2, 2
   size: 10, 10
   split: 3, 3, 3, 3
   pad: 0, 0, 0, 0
   orig: 10, 10
   offset: 0, 0
   index: -1
-ui-white-squircle-15
+
+gameatlas2.png
+size: 512, 128
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+squircles/squircle-15
   rotate: false
   xy: 190, 2
   size: 50, 50
@@ -22,16 +35,7 @@ ui-white-squircle-15
   orig: 50, 50
   offset: 0, 0
   index: -1
-ui-white-squircle-19
-  rotate: false
-  xy: 362, 88
-  size: 44, 38
-  split: 20, 20, 17, 18
-  pad: 0, 0, 0, 0
-  orig: 44, 38
-  offset: 0, 0
-  index: -1
-ui-white-squircle-20
+squircles/squircle-20
   rotate: false
   xy: 318, 84
   size: 42, 42
@@ -40,7 +44,7 @@ ui-white-squircle-20
   orig: 42, 42
   offset: 0, 0
   index: -1
-ui-white-squircle-25
+squircles/squircle-25
   rotate: false
   xy: 264, 74
   size: 52, 52
@@ -49,7 +53,7 @@ ui-white-squircle-25
   orig: 52, 52
   offset: 0, 0
   index: -1
-ui-white-squircle-35
+squircles/squircle-35
   rotate: false
   xy: 190, 54
   size: 72, 72
@@ -58,7 +62,7 @@ ui-white-squircle-35
   orig: 72, 72
   offset: 0, 0
   index: -1
-ui-white-squircle-40
+squircles/squircle-40
   rotate: false
   xy: 106, 44
   size: 82, 82
@@ -67,7 +71,7 @@ ui-white-squircle-40
   orig: 82, 82
   offset: 0, 0
   index: -1
-ui-white-squircle-50
+squircles/squircle-50
   rotate: false
   xy: 2, 24
   size: 102, 102
