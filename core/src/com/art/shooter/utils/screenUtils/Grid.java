@@ -108,7 +108,7 @@ public class Grid {
                 final GridCell gridCell = cells[i][j];
                 if (gridCell.getGameObjects().size > 0) {
                     Color greenTransparent = Color.GREEN;
-                    greenTransparent.a = 0.57f;
+                    greenTransparent.a = 0.43f;
                     shapeRenderer.rect(cellCenterX, cellCenterY, cellSize, cellSize, greenTransparent, greenTransparent, greenTransparent, greenTransparent);
                 } else {
                     shapeRenderer.rect(cellCenterX, cellCenterY, cellSize, cellSize);

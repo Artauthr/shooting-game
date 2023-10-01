@@ -94,7 +94,7 @@ public class BulletEntity extends ASimpleEntity {
 //                if (!(gameObject instanceof ACharacter)) continue;
                 boolean hit = Intersector.overlaps(colliderCircle, gameObject.getBoundingBox());
                 if (hit) {
-                    if (gameObject instanceof  ACharacter) {
+                    if (gameObject instanceof ACharacter) {
                         this.remove();
                         ((ACharacter) gameObject).onHit(delta, direction, this.damage);
                         return;
@@ -109,14 +109,12 @@ public class BulletEntity extends ASimpleEntity {
 
     private void bounceBack (Circle colliderCircle, Rectangle wallRect) {
         if (Intersector.overlaps(colliderCircle, wallRect)) {
-
             if (Math.abs(colliderCircle.x - wallRect.x) < colliderCircle.radius ||
                     Math.abs(colliderCircle.x - (wallRect.x + wallRect.width)) < colliderCircle.radius) {
                 direction.x = -direction.x;
                 rotation = -rotation;
                 return;
             }
-
             // Closer to horizontal walls
             if (Math.abs(colliderCircle.y - wallRect.y) < colliderCircle.radius ||
                     Math.abs(colliderCircle.y - (wallRect.y + wallRect.height)) < colliderCircle.radius) {
@@ -124,12 +122,8 @@ public class BulletEntity extends ASimpleEntity {
                 rotation = -rotation;
                 return;
             }
-
-
         }
     }
-
-
     @Override
     protected void remove() {
         API.get(Grid.class).getCellAt(pos).remove(this);

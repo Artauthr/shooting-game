@@ -46,7 +46,7 @@ public class CustomInputProcessor implements InputProcessor {
                 MapManager mapManager = API.get(MapManager.class);
                 Vector2 wallPos = new Vector2(screenX, Utils.camera.viewportHeight - screenY);
                 if (Gdx.input.isKeyPressed(Input.Keys.R)) {
-                    mapManager.placeWall(wallPos, 90);
+                    mapManager.placeWall(wallPos, false);
                 } else {
                     mapManager.placeWall(wallPos);
                 }

@@ -27,7 +27,6 @@ public class EntitySystem implements Disposable {
             walls.add((Wall) entity);
         }
         toDispose.add(entity);
-        System.out.println("created " + clazz.getSimpleName());
         return entity;
     }
 
@@ -41,7 +40,6 @@ public class EntitySystem implements Disposable {
             if (next.isFlaggedToRemove()) {
                 Pools.free(next);
                 iterator.remove();
-                System.out.println("Removed - " + next.getClass().getSimpleName());
             }
         }
 

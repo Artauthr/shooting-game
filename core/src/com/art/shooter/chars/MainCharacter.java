@@ -126,7 +126,7 @@ public class MainCharacter extends ACharacter {
             deltaX -= velX * delta;
         }
 
-        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
             shoot();
         }
         moveWithCellUpdate(deltaX, deltaY);

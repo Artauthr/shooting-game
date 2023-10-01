@@ -15,14 +15,14 @@ import lombok.Getter;
 public class Wall extends ASimpleEntity {
     @Getter
     private Sprite wallSprite;
-    private boolean addedToCell;
+    private boolean configured;
     public Wall () {
         FileHandle handle = Gdx.files.internal("wall.png");
         Texture wallTexture = new Texture(handle);
         wallSprite = new Sprite(wallTexture);
         int cellSize = Utils.cellSize;
-        wallSprite.setSize(2, cellSize);
-        boundingBox.setSize(2, cellSize);
+        wallSprite.setSize(10, cellSize);
+        boundingBox.setSize(10, cellSize);
     }
 
     public void addToCell () {
@@ -34,9 +34,10 @@ public class Wall extends ASimpleEntity {
     protected void update(float delta) {
         wallSprite.setPosition(pos.x, pos.y);
         boundingBox.setPosition(pos.x, pos.y);
-        if (!addedToCell) {
+        if (!configured) {
+            boundingBox.setSize(wallSprite.getWidth(), wallSprite.getHeight());
             addToCell();
-            addedToCell = true;
+            configured = true;
         }
     }
 
