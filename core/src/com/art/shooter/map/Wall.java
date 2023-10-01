@@ -2,21 +2,21 @@ package com.art.shooter.map;
 
 import com.art.shooter.entities.ASimpleEntity;
 import com.art.shooter.logic.API;
-import com.art.shooter.logic.GameObject;
 import com.art.shooter.utils.Utils;
 import com.art.shooter.utils.screenUtils.Grid;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import lombok.Getter;
 
-public class Obstacle extends ASimpleEntity {
+public class Wall extends ASimpleEntity {
+    @Getter
     private Sprite wallSprite;
     private boolean addedToCell;
-    public Obstacle () {
+    public Wall () {
         FileHandle handle = Gdx.files.internal("wall.png");
         Texture wallTexture = new Texture(handle);
         wallSprite = new Sprite(wallTexture);

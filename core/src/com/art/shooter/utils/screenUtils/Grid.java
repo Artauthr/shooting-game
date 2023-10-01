@@ -50,6 +50,7 @@ public class Grid {
         int j = Math.min(u, colAmount - 1);
         int i = Math.min(v,rowAmount - 1);
 
+
         return cells[i][j];
     }
 

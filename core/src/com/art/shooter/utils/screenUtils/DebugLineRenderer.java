@@ -2,7 +2,7 @@ package com.art.shooter.utils.screenUtils;
 
 import com.art.shooter.entities.EntitySystem;
 import com.art.shooter.logic.API;
-import com.art.shooter.map.Obstacle;
+import com.art.shooter.map.Wall;
 import com.art.shooter.utils.Utils;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -29,8 +29,8 @@ public class DebugLineRenderer {
         // end bounds
 
         final EntitySystem entitySystem = API.get(EntitySystem.class);
-        Array<Obstacle> walls = entitySystem.getWalls();
-        for (Obstacle wall : walls) {
+        Array<Wall> walls = entitySystem.getWalls();
+        for (Wall wall : walls) {
             Rectangle boundingBox = wall.getBoundingBox();
             drawBoundingBoxAsRect(shapeRenderer, boundingBox);
         }

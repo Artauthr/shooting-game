@@ -13,9 +13,14 @@ public class MapManager {
     }
 
     public void placeWall (Vector2 vec) {
+        placeWall(vec, 0);
+    }
+
+    public void placeWall (Vector2 vec, float rotation) {
         EntitySystem entitySystem = API.get(EntitySystem.class);
-        Obstacle wall = entitySystem.createEntity(Obstacle.class);
+        Wall wall = entitySystem.createEntity(Wall.class);
         wall.setPos(vec);
+        wall.getWallSprite().setRotation(rotation);
     }
 
     public void getClosestPlaceForWall (float x, float y) {
