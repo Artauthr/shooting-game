@@ -27,8 +27,8 @@ public class MainCharacter extends ACharacter {
     private final float SPEED = 240f;
     private final float DASH_DISTANCE = 800f;
     private Vector2 direction;
-    private Batch batch;
     private final Vector2 muzzleOffset;
+    private GridCell currCell;
 
     public MainCharacter() {
         pos = new Vector2();
@@ -46,6 +46,7 @@ public class MainCharacter extends ACharacter {
         final float originY = characterSprite.getHeight() / 2.0f - 2;
         characterSprite.setOrigin(originX, originY);
         boundingBox.setSize(20, 22);
+        characterSprite.setOriginBasedPosition(originX, originY);
     }
 
     private float getAngle () {
@@ -147,12 +148,6 @@ public class MainCharacter extends ACharacter {
         pos.add(deltaX * multiplier, deltaY * multiplier);
         boundingBox.setPosition(pos.x + 1, pos.y - 3);
         grid.addEntityByRect(this);
-    }
-
-    private void dash (Vector2 direction, float delta) {
-        pos.x += direction.x * DASH_DISTANCE * delta;
-        pos.y += direction.y * DASH_DISTANCE * delta;
-
     }
 
     @Override

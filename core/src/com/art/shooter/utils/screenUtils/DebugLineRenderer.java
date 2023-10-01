@@ -1,14 +1,12 @@
 package com.art.shooter.utils.screenUtils;
 
-import com.art.shooter.chars.MainCharacter;
-import com.art.shooter.entities.ASimpleEntity;
 import com.art.shooter.entities.EntitySystem;
 import com.art.shooter.logic.API;
-import com.art.shooter.logic.CharacterManager;
+import com.art.shooter.map.Obstacle;
 import com.art.shooter.utils.Utils;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 
@@ -30,25 +28,17 @@ public class DebugLineRenderer {
         shapeRenderer.line(viewportWidth, 0, viewportWidth, viewportHeight);
         // end bounds
 
-        final MainCharacter mainCharacter = API.get(CharacterManager.class).getMainCharacter();
         final EntitySystem entitySystem = API.get(EntitySystem.class);
-        final Array<ASimpleEntity> entities = entitySystem.getEntities();
-        for (ASimpleEntity entity : entities) {
-//            final Rectangle boundingBox = entity.getBoundingBox();
-//            shapeRenderer.rect(boundingBox.getX(), boundingBox.getY(), boundingBox.getWidth(), boundingBox.getHeight());
-
-//            final Circle circle = entity.getColliderCircle();
-//            shapeRenderer.circle(circle.x, circle.y, circle.radius);
+        Array<Obstacle> walls = entitySystem.getWalls();
+        for (Obstacle wall : walls) {
+            Rectangle boundingBox = wall.getBoundingBox();
+            drawBoundingBoxAsRect(shapeRenderer, boundingBox);
         }
 
-//        circle
-//        final Circle colliderCircle = mainCharacter.getColliderCircle();
-//        shapeRenderer.circle(colliderCircle.x, colliderCircle.y, colliderCircle.radius);
-
-//        final Rectangle colliderBox = mainCharacter.getBoundingBox();
-//        shapeRenderer.rect(colliderBox.getX(), colliderBox.getY(), colliderBox.getWidth(), colliderBox.getHeight());
-
-
         shapeRenderer.end();
+    }
+
+    public void drawBoundingBoxAsRect (ShapeRenderer shapeRenderer, Rectangle boundingBox) {
+        shapeRenderer.rect(boundingBox.x, boundingBox.y, boundingBox.width, boundingBox.height, Color.RED,Color.RED,Color.RED,Color.RED);
     }
 }

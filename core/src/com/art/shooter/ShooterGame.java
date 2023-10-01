@@ -65,6 +65,8 @@ public class ShooterGame extends ApplicationAdapter {
 		Gdx.graphics.setCursor(Gdx.graphics.newCursor(pixmap, xHotspot, yHotspot));
 		pixmap.dispose();
 
+		Utils.cellSize = API.get(Grid.class).getCellSize();
+
 		//resources
 		API.get(Resources.class).queueLoading();
 	}

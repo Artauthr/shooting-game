@@ -25,6 +25,9 @@ public class BloodEntity extends ASimpleEntity {
     protected void update(float delta) {
         timer += delta;
         alphaModulation -= delta / lifeTime;
+        if (alphaModulation < 0) {
+            alphaModulation = 0;
+        }
         if (timer > lifeTime) remove();
     }
 

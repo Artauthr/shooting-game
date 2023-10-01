@@ -46,7 +46,7 @@ public class CharacterManager implements Disposable {
         for (ACharacter character : characters) {
             final Sprite sprite = character.getCharacterSprite();
             final Vector2 pos = character.getPos();
-            sprite.setPosition(pos.x, pos.y);
+            sprite.setOriginBasedPosition(pos.x, pos.y);
             sprite.draw(batch);
         }
     }
