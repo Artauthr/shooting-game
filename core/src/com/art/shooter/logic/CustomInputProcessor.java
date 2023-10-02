@@ -47,10 +47,12 @@ public class CustomInputProcessor implements InputProcessor {
                 MapManager mapManager = API.get(MapManager.class);
                 Vector2 wallPos = new Vector2(screenX, Utils.camera.viewportHeight - screenY);
                 final Vector2 originPoint = API.get(Grid.class).getClosestPoint(screenX, Utils.camera.viewportHeight - screenY);
-                if (Gdx.input.isKeyPressed(Input.Keys.R)) {
-                    mapManager.placeWall(originPoint, false);
+                boolean vertical = API.get(Grid.class).isVertical(screenX, Utils.camera.viewportHeight - screenY);
+                System.out.println("vertical = " + vertical);
+                if (vertical) {
+                    mapManager.placeWall(originPoint, true);
                 } else {
-                    mapManager.placeWall(originPoint);
+                    mapManager.placeWall(originPoint, false);
                 }
                 System.out.println("originPoint = " + originPoint);
             }
