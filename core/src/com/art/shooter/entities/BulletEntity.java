@@ -24,11 +24,9 @@ public class BulletEntity extends ASimpleEntity {
     @Setter
     private float rotation;
 
-    @Getter @Setter
-    private Vector2 pos;
     @Setter
     private Vector2 direction;
-    private final float speed = 800f;
+    private final float speed = 720f;
     private final float lifeTime = 4f;
     private float timer = 0f;
     private GridCell currCell;
@@ -41,11 +39,9 @@ public class BulletEntity extends ASimpleEntity {
         bulletSprite  = new Sprite(bullet);
         bulletSprite.setSize(2, 13);
 
-        final float originX = bulletSprite.getWidth() / 2.0f;
-        final float originY = 0;
-        bulletSprite.setOrigin(originX, originY);
-        boundingBox.setSize(bulletSprite.getWidth(), bulletSprite.getHeight());
-        colliderCircle.setRadius(Math.max(bulletSprite.getWidth(), bulletSprite.getHeight()) / 2f);
+
+        colliderCircle.setRadius(bulletSprite.getHeight() /2f);
+
     }
 
 
@@ -56,13 +52,13 @@ public class BulletEntity extends ASimpleEntity {
 
     @Override
     protected void draw (Batch batch) {
-        bulletSprite.setPosition(pos.x, pos.y);
-        bulletSprite.setRotation(rotation);
         bulletSprite.draw(batch);
     }
 
     @Override
     protected void update(float delta) {
+        bulletSprite.setOriginBasedPosition(pos.x, pos.y);
+        bulletSprite.setRotation(rotation);
         timer += delta;
         if (timer > lifeTime) {
             remove();
@@ -72,7 +68,6 @@ public class BulletEntity extends ASimpleEntity {
         grid.removeEntityByPosition(this);
         pos.x += direction.x * speed * delta;
         pos.y += direction.y * speed * delta;
-
         if (pos.x > Utils.camera.viewportWidth || pos.x < 0) {
             setFlaggedToRemove(true);
             return;
@@ -82,7 +77,6 @@ public class BulletEntity extends ASimpleEntity {
             return;
         }
         this.currCell = grid.addEntityByPosition(this);
-//        boundingBox.setPosition(pos);
         colliderCircle.setPosition(pos);
         checkForCollision(delta);
     }
@@ -91,7 +85,6 @@ public class BulletEntity extends ASimpleEntity {
         if (this.currCell != null) {
             Array<GameObject> gameObjects = currCell.getGameObjects();
             for (GameObject gameObject : gameObjects) {
-//                if (!(gameObject instanceof ACharacter)) continue;
                 boolean hit = Intersector.overlaps(colliderCircle, gameObject.getBoundingBox());
                 if (hit) {
                     if (gameObject instanceof ACharacter) {
@@ -108,21 +101,17 @@ public class BulletEntity extends ASimpleEntity {
     }
 
     private void bounceBack (Circle colliderCircle, Rectangle wallRect) {
-        if (Intersector.overlaps(colliderCircle, wallRect)) {
             if (Math.abs(colliderCircle.x - wallRect.x) < colliderCircle.radius ||
                     Math.abs(colliderCircle.x - (wallRect.x + wallRect.width)) < colliderCircle.radius) {
                 direction.x = -direction.x;
                 rotation = -rotation;
-                return;
             }
             // Closer to horizontal walls
             if (Math.abs(colliderCircle.y - wallRect.y) < colliderCircle.radius ||
                     Math.abs(colliderCircle.y - (wallRect.y + wallRect.height)) < colliderCircle.radius) {
                 direction.y = -direction.y;
                 rotation = -rotation;
-                return;
             }
-        }
     }
     @Override
     protected void remove() {

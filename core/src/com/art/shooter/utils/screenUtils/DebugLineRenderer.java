@@ -1,5 +1,6 @@
 package com.art.shooter.utils.screenUtils;
 
+import com.art.shooter.entities.ASimpleEntity;
 import com.art.shooter.entities.EntitySystem;
 import com.art.shooter.logic.API;
 import com.art.shooter.map.Wall;
@@ -7,6 +8,7 @@ import com.art.shooter.utils.Utils;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 
@@ -29,10 +31,16 @@ public class DebugLineRenderer {
         // end bounds
 
         final EntitySystem entitySystem = API.get(EntitySystem.class);
-        Array<Wall> walls = entitySystem.getWalls();
-        for (Wall wall : walls) {
-            Rectangle boundingBox = wall.getBoundingBox();
-            drawBoundingBoxAsRect(shapeRenderer, boundingBox);
+        final Array<ASimpleEntity> entities = entitySystem.getEntities();
+//        for (ASimpleEntity entity : entities) {
+//            final Circle colliderCircle = entity.getColliderCircle();
+//            shapeRenderer.circle(colliderCircle.x, colliderCircle.y, colliderCircle.radius);
+//        }
+
+        for (ASimpleEntity entity : entities) {
+            if (entity instanceof Wall) {
+                drawBoundingBoxAsRect(shapeRenderer, entity.getBoundingBox());
+            }
         }
 
         shapeRenderer.end();

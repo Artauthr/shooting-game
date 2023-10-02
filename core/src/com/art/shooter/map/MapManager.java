@@ -22,9 +22,9 @@ public class MapManager {
         Wall wall = entitySystem.createEntity(Wall.class);
         wall.setPos(vec);
         if (vertical) {
-            wall.getWallSprite().setSize(7, Utils.cellSize);
+            wall.getWallSprite().setSize(3, Utils.cellSize);
         } else {
-            wall.getWallSprite().setSize(Utils.cellSize,7);
+            wall.getWallSprite().setSize(Utils.cellSize,3);
         }
     }
 

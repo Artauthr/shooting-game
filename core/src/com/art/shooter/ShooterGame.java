@@ -55,7 +55,7 @@ public class ShooterGame extends ApplicationAdapter {
 
 		CharacterManager charManager = API.get(CharacterManager.class);
 		charManager.createCharacter(MainCharacter.class);
-		charManager.spawnEnemyAtRandom();
+//		charManager.spawnEnemyAtRandom();
 
 
 		//set up cursor
@@ -89,6 +89,7 @@ public class ShooterGame extends ApplicationAdapter {
 
 		batch.setProjectionMatrix(camera.combined);
 
+		API.get(DebugLineRenderer.class).draw(shapeRenderer);
 		batch.begin(); //main systems batch
 		API.get(EntitySystem.class).drawEntities(batch);
 		API.get(CharacterManager.class).drawCharacters(batch);
@@ -103,7 +104,6 @@ public class ShooterGame extends ApplicationAdapter {
 		actUI();
 		gameUI.draw();
 
-		API.get(DebugLineRenderer.class).draw(shapeRenderer);
 		API.get(Grid.class).renderDebug(shapeRenderer);
 	}
 

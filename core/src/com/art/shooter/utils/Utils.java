@@ -22,5 +22,11 @@ public class Utils {
         double powY = Math.pow((v2.y - v1.y), 2);
         return (float) Math.sqrt(powX + powY);
     }
+    public static Vector2 reflect(Vector2 velocity, Vector2 normal) {
+        // Reflects the velocity vector across the normal vector
+        float dotProduct = velocity.dot(normal);
+        return new Vector2(velocity.x - 2 * dotProduct * normal.x, velocity.y - 2 * dotProduct * normal.y);
+    }
+
 
 }
