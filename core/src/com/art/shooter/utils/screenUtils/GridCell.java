@@ -18,5 +18,4 @@ public class GridCell {
     public void remove (GameObject gameObject) {
         this.gameObjects.removeValue(gameObject, true);
     }
-
 }

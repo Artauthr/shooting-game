@@ -99,9 +99,9 @@ public class MainCharacter extends ACharacter {
         entity.setDamage(1);
 
         //move back from recoil
-        Vector2 backward = direction.cpy();
-        backward.scl(-1); //reverse the direction
-        moveWithCellUpdate(backward.x, backward.y, 3);
+//        Vector2 backward = direction.cpy();
+//        backward.scl(-1); //reverse the direction
+//        moveWithCellUpdate(backward.x, backward.y, 3);
     }
 
     public void update (float delta) {

@@ -20,6 +20,7 @@ public class Wall extends ASimpleEntity {
         FileHandle handle = Gdx.files.internal("wall.png");
         Texture wallTexture = new Texture(handle);
         wallSprite = new Sprite(wallTexture);
+        wallSprite.setOriginCenter();
         int cellSize = Utils.cellSize;
         wallSprite.setSize(10, cellSize);
         boundingBox.setSize(10, cellSize);
@@ -34,8 +35,8 @@ public class Wall extends ASimpleEntity {
     protected void update(float delta) {
         wallSprite.setPosition(pos.x, pos.y);
         boundingBox.setPosition(pos.x, pos.y);
+        boundingBox.setSize(wallSprite.getWidth(), wallSprite.getHeight());
         if (!configured) {
-            boundingBox.setSize(wallSprite.getWidth(), wallSprite.getHeight());
             addToCell();
             configured = true;
         }

@@ -50,8 +50,18 @@ public class Grid {
         int j = Math.min(u, colAmount - 1);
         int i = Math.min(v,rowAmount - 1);
 
-
         return cells[i][j];
+
+    }
+
+    public Vector2 getOriginPoint (float x, float y) {
+        final float u = x % 80;
+        float originX = x - u;
+
+        final float v = y % 80;
+        float originY = y - v;
+
+        return new Vector2(originX, originY);
     }
 
     public GridCell getCellAt (Vector2 vec2) {

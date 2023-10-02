@@ -3,6 +3,7 @@ package com.art.shooter.logic;
 import com.art.shooter.chars.MainCharacter;
 import com.art.shooter.map.MapManager;
 import com.art.shooter.utils.Utils;
+import com.art.shooter.utils.screenUtils.Grid;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
@@ -45,11 +46,13 @@ public class CustomInputProcessor implements InputProcessor {
             if (API.get(GameLogic.class).isInEditMode()) {
                 MapManager mapManager = API.get(MapManager.class);
                 Vector2 wallPos = new Vector2(screenX, Utils.camera.viewportHeight - screenY);
+                final Vector2 originPoint = API.get(Grid.class).getOriginPoint(screenX, Utils.camera.viewportHeight - screenY);
                 if (Gdx.input.isKeyPressed(Input.Keys.R)) {
-                    mapManager.placeWall(wallPos, false);
+                    mapManager.placeWall(originPoint, false);
                 } else {
-                    mapManager.placeWall(wallPos);
+                    mapManager.placeWall(originPoint);
                 }
+                System.out.println("originPoint = " + originPoint);
             }
         }
 
