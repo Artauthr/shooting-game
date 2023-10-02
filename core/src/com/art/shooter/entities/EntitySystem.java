@@ -1,7 +1,7 @@
 package com.art.shooter.entities;
 
+import com.art.shooter.map.Wall;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
-import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Pools;
@@ -12,6 +12,8 @@ public class EntitySystem implements Disposable {
     @Getter
     private Array<ASimpleEntity> entities = new Array<>();
     private Array<ASimpleEntity> toDispose = new Array<>();
+    @Getter
+    private Array<Wall> walls = new Array<>();
 
     public EntitySystem() {
 
@@ -21,8 +23,10 @@ public class EntitySystem implements Disposable {
         T entity = Pools.obtain(clazz);
         entity.create();
         entities.add(entity);
+        if (clazz.isAssignableFrom(Wall.class)) {
+            walls.add((Wall) entity);
+        }
         toDispose.add(entity);
-        System.out.println("created " + clazz.getSimpleName());
         return entity;
     }
 
@@ -36,7 +40,6 @@ public class EntitySystem implements Disposable {
             if (next.isFlaggedToRemove()) {
                 Pools.free(next);
                 iterator.remove();
-                System.out.println("Removed - " + next.getClass().getSimpleName());
             }
         }
 

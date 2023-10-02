@@ -9,6 +9,9 @@ import lombok.Setter;
 
 public abstract class GameObject {
 
+    @Getter
+    protected boolean debug;
+
     @Getter @Setter
     protected Circle colliderCircle = new Circle();
 

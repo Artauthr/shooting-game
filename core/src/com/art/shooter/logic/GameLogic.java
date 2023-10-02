@@ -8,6 +8,9 @@ public class GameLogic {
     @Getter
     private boolean paused = false;
 
+    @Getter
+    private boolean inEditMode = true;
+
     public GameLogic () {
 
     }

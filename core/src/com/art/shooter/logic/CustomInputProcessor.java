@@ -1,10 +1,13 @@
 package com.art.shooter.logic;
 
+import com.art.shooter.chars.MainCharacter;
+import com.art.shooter.map.MapManager;
 import com.art.shooter.utils.Utils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 public class CustomInputProcessor implements InputProcessor {
@@ -18,7 +21,12 @@ public class CustomInputProcessor implements InputProcessor {
                 gameLogic.pauseGame();
             }
         }
-        return false;
+        if (keycode == Input.Keys.Q) {
+            MainCharacter mainCharacter = API.get(CharacterManager.class).getMainCharacter();
+            System.out.println("mainCharacter.pos.x = " + mainCharacter.pos.x);
+            System.out.println("mainCharacter.pos.y = " + mainCharacter.pos.y);
+        }
+        return true;
     }
 
     @Override
@@ -33,7 +41,19 @@ public class CustomInputProcessor implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        return false;
+        if (button == Input.Buttons.RIGHT) {
+            if (API.get(GameLogic.class).isInEditMode()) {
+                MapManager mapManager = API.get(MapManager.class);
+                Vector2 wallPos = new Vector2(screenX, Utils.camera.viewportHeight - screenY);
+                if (Gdx.input.isKeyPressed(Input.Keys.R)) {
+                    mapManager.placeWall(wallPos, false);
+                } else {
+                    mapManager.placeWall(wallPos);
+                }
+            }
+        }
+
+        return true;
     }
 
     @Override

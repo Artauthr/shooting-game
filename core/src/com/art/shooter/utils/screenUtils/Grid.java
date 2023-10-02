@@ -10,10 +10,13 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import lombok.Getter;
 
 // the griddy
 public class Grid {
     private Array<GridCell> tmp = new Array<>();
+
+    @Getter
     private int cellSize;
     private int rowAmount;
     private int colAmount;
@@ -46,6 +49,7 @@ public class Grid {
 
         int j = Math.min(u, colAmount - 1);
         int i = Math.min(v,rowAmount - 1);
+
 
         return cells[i][j];
     }
@@ -104,7 +108,7 @@ public class Grid {
                 final GridCell gridCell = cells[i][j];
                 if (gridCell.getGameObjects().size > 0) {
                     Color greenTransparent = Color.GREEN;
-                    greenTransparent.a = 0.57f;
+                    greenTransparent.a = 0.43f;
                     shapeRenderer.rect(cellCenterX, cellCenterY, cellSize, cellSize, greenTransparent, greenTransparent, greenTransparent, greenTransparent);
                 } else {
                     shapeRenderer.rect(cellCenterX, cellCenterY, cellSize, cellSize);

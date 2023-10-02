@@ -3,13 +3,16 @@ package com.art.shooter.entities;
 import com.art.shooter.chars.ACharacter;
 import com.art.shooter.logic.API;
 import com.art.shooter.logic.GameObject;
+import com.art.shooter.map.Wall;
 import com.art.shooter.utils.Utils;
 import com.art.shooter.utils.screenUtils.Grid;
 import com.art.shooter.utils.screenUtils.GridCell;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import lombok.Getter;
@@ -88,18 +91,39 @@ public class BulletEntity extends ASimpleEntity {
         if (this.currCell != null) {
             Array<GameObject> gameObjects = currCell.getGameObjects();
             for (GameObject gameObject : gameObjects) {
-                if (!(gameObject instanceof ACharacter)) continue;
+//                if (!(gameObject instanceof ACharacter)) continue;
                 boolean hit = Intersector.overlaps(colliderCircle, gameObject.getBoundingBox());
                 if (hit) {
-                    this.remove();
-                    ((ACharacter) gameObject).onHit(delta, direction, this.damage);
-                    System.out.println("hit registered");
-                    return;
+                    if (gameObject instanceof ACharacter) {
+                        this.remove();
+                        ((ACharacter) gameObject).onHit(delta, direction, this.damage);
+                        return;
+                    } else if (gameObject instanceof Wall) {
+                        this.bounceBack(this.colliderCircle, gameObject.getBoundingBox());
+                        return;
+                    }
                 }
             }
         }
     }
 
+    private void bounceBack (Circle colliderCircle, Rectangle wallRect) {
+        if (Intersector.overlaps(colliderCircle, wallRect)) {
+            if (Math.abs(colliderCircle.x - wallRect.x) < colliderCircle.radius ||
+                    Math.abs(colliderCircle.x - (wallRect.x + wallRect.width)) < colliderCircle.radius) {
+                direction.x = -direction.x;
+                rotation = -rotation;
+                return;
+            }
+            // Closer to horizontal walls
+            if (Math.abs(colliderCircle.y - wallRect.y) < colliderCircle.radius ||
+                    Math.abs(colliderCircle.y - (wallRect.y + wallRect.height)) < colliderCircle.radius) {
+                direction.y = -direction.y;
+                rotation = -rotation;
+                return;
+            }
+        }
+    }
     @Override
     protected void remove() {
         API.get(Grid.class).getCellAt(pos).remove(this);
