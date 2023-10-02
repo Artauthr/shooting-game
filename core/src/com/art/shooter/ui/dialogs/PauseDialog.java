@@ -8,5 +8,16 @@ public class PauseDialog extends ADialog {
     @Override
     protected void constructContent(Table content) {
         content.add().size(200,300);
+
+    }
+
+    @Override
+    protected String getDialogTitle() {
+        return "Settings";
+    }
+
+    @Override
+    protected float getTitleFontScale() {
+        return 3f;
     }
 }

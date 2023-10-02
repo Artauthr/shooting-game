@@ -71,13 +71,13 @@ public abstract class ADialog extends Table {
     }
 
     protected void constructOverlay(Table overlayTable) {
-        overlayTable.add(closeButton).expand().top().right().pad(20).padTop(18);
+        overlayTable.add(closeButton).top().right().pad(20).padTop(18).size(3);
     }
 
     protected void initCloseButton () {
         // init close button
         final Drawable drawable = Resources.obtainDrawable("ui-close-icon");
-        closeButton = new ImageOffsetButton(OffsetButton.Style.RED, drawable);
+        closeButton = new ImageOffsetButton(OffsetButton.Style.GRAY, drawable);
         closeButton.setOnTouchUp(this::hide);
     }
 
@@ -117,7 +117,7 @@ public abstract class ADialog extends Table {
         final Label.LabelStyle regularLabelStyle = GameUI.get().getRegularLabelStyle();
         titleLabel = new Label(getDialogTitle(), regularLabelStyle);
         titleLabel.setColor(getTitleFontColor());
-        titleLabel.setScale(getTitleFontScale());
+        titleLabel.setFontScale(getTitleFontScale());
 
         titleSegment.add(titleLabel).pad(50);
     }
