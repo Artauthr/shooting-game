@@ -46,7 +46,7 @@ public class CustomInputProcessor implements InputProcessor {
             if (API.get(GameLogic.class).isInEditMode()) {
                 MapManager mapManager = API.get(MapManager.class);
                 Vector2 wallPos = new Vector2(screenX, Utils.camera.viewportHeight - screenY);
-                final Vector2 originPoint = API.get(Grid.class).getOriginPoint(screenX, Utils.camera.viewportHeight - screenY);
+                final Vector2 originPoint = API.get(Grid.class).getClosestPoint(screenX, Utils.camera.viewportHeight - screenY);
                 if (Gdx.input.isKeyPressed(Input.Keys.R)) {
                     mapManager.placeWall(originPoint, false);
                 } else {

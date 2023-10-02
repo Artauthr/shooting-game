@@ -23,9 +23,9 @@ public class MapManager {
         Wall wall = entitySystem.createEntity(Wall.class);
         final Sprite wallSprite = wall.getWallSprite();
         if (vertical) {
-            wallSprite.setSize(7, Utils.cellSize);
+            wallSprite.setSize(7, Utils.cellSize-1);
         } else {
-            wallSprite.setSize(Utils.cellSize,7);
+            wallSprite.setSize(Utils.cellSize-1,7);
         }
 //        wall.setPos(new Vector2(vec.x - wallSprite.getWidth() / 2f, vec.y - wallSprite.getHeight() / 2f));
         wall.setPos(vec);

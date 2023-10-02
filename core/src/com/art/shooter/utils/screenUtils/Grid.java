@@ -55,13 +55,41 @@ public class Grid {
     }
 
     public Vector2 getOriginPoint (float x, float y) {
-        final float u = x % 80;
+        final float u = x % cellSize;
         float originX = x - u;
 
-        final float v = y % 80;
+        final float v = y % cellSize;
         float originY = y - v;
 
         return new Vector2(originX, originY);
+    }
+
+    public Vector2 getClosestPoint (float x, float y) {
+        float diffX = x % cellSize;
+        float leftX = x - diffX; //80
+        float rightX = leftX + cellSize; //160
+        float leftXDiff = Math.abs(x - leftX);
+        float rightXDiff = Math.abs(x - rightX);
+        float closeX;
+        if (leftXDiff < rightXDiff) {
+            closeX = leftX;
+        } else {
+            closeX = rightX;
+        }
+
+        float diffY = y % cellSize;
+        float leftY = y - diffY; //80
+        float rightY = leftY + cellSize; //160
+        float leftYDiff = Math.abs(y - leftY);
+        float rightYDiff = Math.abs(y - rightY);
+        float closeY;
+        if (leftYDiff < rightYDiff) {
+            closeY = leftY;
+        } else {
+            closeY = rightY;
+        }
+
+        return new Vector2(closeX, closeY);
     }
 
     public GridCell getCellAt (Vector2 vec2) {
