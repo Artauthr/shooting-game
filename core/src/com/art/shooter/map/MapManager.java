@@ -31,9 +31,7 @@ public class MapManager {
         wall.setPos(vec);
     }
 
-    public void getClosestPlaceForWall (float x, float y) {
 
-    }
 
     public void handleInput () {
         if (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)) {

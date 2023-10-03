@@ -64,6 +64,15 @@ public class Grid {
         return new Vector2(originX, originY);
     }
 
+    public float getLesserDiff (float point) {
+        float difference = point % cellSize;
+        float lowerBound = point - difference;
+        float upperBound = lowerBound + cellSize;
+        float lowerDiff = Math.abs(point - lowerBound);
+        float upperDiff = Math.abs(point - upperBound);
+        return Math.min(lowerDiff, upperDiff);
+    }
+
     public float getClosestGridPoint (float point) {
         float difference = point % cellSize;
         float lowerBound = point - difference;
@@ -78,14 +87,24 @@ public class Grid {
         }
     }
 
+    public boolean isUpperBound (float point) {
+        float difference = point % cellSize;
+        float lowerBound = point - difference;
+        float upperBound = lowerBound + cellSize;
+        float lowerDiff = Math.abs(point - lowerBound);
+        float upperDiff = Math.abs(point - upperBound);
+
+        return !(lowerDiff < upperDiff);
+    }
+
     public float diff (float num) {
         return num % cellSize;
     }
 
     public boolean isVertical (float x, float y) {
-        float closeX = diff(x);
-        float closeY = diff(y);
-        return closeX > closeY;
+        float closeX = getLesserDiff(x);
+        float closeY = getLesserDiff(y);
+        return closeX < closeY;
     }
 
     public Vector2 getClosestPoint (float x, float y) {

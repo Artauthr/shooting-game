@@ -45,10 +45,20 @@ public class CustomInputProcessor implements InputProcessor {
         if (button == Input.Buttons.RIGHT) {
             if (API.get(GameLogic.class).isInEditMode()) {
                 MapManager mapManager = API.get(MapManager.class);
-                Vector2 wallPos = new Vector2(screenX, Utils.camera.viewportHeight - screenY);
-                final Vector2 originPoint = API.get(Grid.class).getClosestPoint(screenX, Utils.camera.viewportHeight - screenY);
-                boolean vertical = API.get(Grid.class).isVertical(screenX, Utils.camera.viewportHeight - screenY);
+
+
+                final float trueY = Utils.camera.viewportHeight - screenY;
+                final Vector2 originPoint = API.get(Grid.class).getClosestPoint(screenX, trueY);
+                boolean vertical = API.get(Grid.class).isVertical(screenX, trueY);
+                boolean minusOffset = API.get(Grid.class).isUpperBound(screenX);
+                boolean minusOffset2 = API.get(Grid.class).isUpperBound(trueY);
                 System.out.println("vertical = " + vertical);
+                if (minusOffset) {
+                    originPoint.x -= Utils.cellSize;
+                }
+                if (minusOffset2) {
+                    originPoint.y -= Utils.cellSize;
+                }
                 if (vertical) {
                     mapManager.placeWall(originPoint, true);
                 } else {

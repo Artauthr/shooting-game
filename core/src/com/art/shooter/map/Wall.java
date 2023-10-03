@@ -17,7 +17,7 @@ public class Wall extends ASimpleEntity {
     private Sprite wallSprite;
     private boolean configured;
     public Wall () {
-        FileHandle handle = Gdx.files.internal("wall.png");
+        FileHandle handle = Gdx.files.internal("white-pixel.png");
         Texture wallTexture = new Texture(handle);
         wallSprite = new Sprite(wallTexture);
         wallSprite.setOriginCenter();

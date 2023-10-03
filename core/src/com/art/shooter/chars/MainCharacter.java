@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -143,6 +144,7 @@ public class MainCharacter extends ACharacter {
         if (pos.x + deltaX > Utils.camera.viewportWidth) deltaX = 0;
         if (pos.y + deltaY < 0) deltaY = 0;
         if (pos.y + deltaY > Utils.camera.viewportHeight) deltaY = 0;
+
 
         grid.removeEntityByRect(this);
         pos.add(deltaX * multiplier, deltaY * multiplier);
