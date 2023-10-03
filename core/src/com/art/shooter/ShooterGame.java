@@ -19,6 +19,8 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -28,12 +30,17 @@ public class ShooterGame extends ApplicationAdapter {
 	private ShapeRenderer shapeRenderer;
 	private GameUI gameUI;
 	private OrthographicCamera camera;
-	
+	private ShaderProgram shaderProgram;
+
 	@Override
 	public void create () {
 		batch = new PolygonSpriteBatch();
 		shapeRenderer = new ShapeRenderer();
 		shapeRenderer.setAutoShapeType(true);
+
+		//SHADERS
+		shaderProgram = new ShaderProgram(Gdx.files.internal("shaders/vert.glsl"), Gdx.files.internal("shaders/frag.glsl"));
+
 
 		camera = new OrthographicCamera(1280,720);
 		camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
@@ -86,11 +93,11 @@ public class ShooterGame extends ApplicationAdapter {
 		}
 
 		ScreenUtils.clear(ColorLib.CHARCOAL_GRAY.getColor());
-
 		batch.setProjectionMatrix(camera.combined);
 
 		API.get(DebugLineRenderer.class).draw(shapeRenderer);
 		batch.begin(); //main systems batch
+		batch.setShader(shaderProgram);
 		API.get(EntitySystem.class).drawEntities(batch);
 		API.get(CharacterManager.class).drawCharacters(batch);
 
@@ -119,6 +126,7 @@ public class ShooterGame extends ApplicationAdapter {
 	public void dispose () {
 		batch.dispose();
 		shapeRenderer.dispose();
+		shaderProgram.dispose();
 		API.dispose();
 	}
 }
