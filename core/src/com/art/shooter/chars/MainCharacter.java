@@ -4,7 +4,6 @@ import com.art.shooter.entities.BulletEntity;
 import com.art.shooter.entities.EntitySystem;
 
 import com.art.shooter.logic.API;
-import com.art.shooter.utils.Resources;
 import com.art.shooter.utils.Utils;
 import com.art.shooter.utils.screenUtils.Grid;
 import com.art.shooter.utils.screenUtils.GridCell;
@@ -15,39 +14,32 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.utils.Array;
 
 public class MainCharacter extends ACharacter {
-    private float velX;
-    private float velY;
-    private final float SPEED = 240f;
-    private final float DASH_DISTANCE = 800f;
+    private float speed = 240f;
     private Vector2 direction;
     private final Vector2 muzzleOffset;
-    private GridCell currCell;
 
     public MainCharacter() {
         pos = new Vector2();
         direction = new Vector2();
         muzzleOffset = new Vector2();
 
-        velX = SPEED;
-        velY = SPEED;
-
         Texture img = new Texture("shooter.png");
         characterSprite = new Sprite(img);
         characterSprite.setScale(3f);
 
-        final float originX = characterSprite.getWidth() / 2.0f + 0.5f;
-        final float originY = characterSprite.getHeight() / 2.0f - 2;
+        float spriteWidth = characterSprite.getWidth();
+        final float originX = spriteWidth / 2.0f + 0.5f;
+        float spriteHeight = characterSprite.getHeight();
+        final float originY = spriteHeight / 2.0f - 2;
         characterSprite.setOrigin(originX, originY);
-        boundingBox.setSize(20, 22);
-        characterSprite.setOriginBasedPosition(originX, originY);
+        float colliderMul = 1.25f;
+
+        collider = new Polygon(new float[]{0,0, spriteWidth * colliderMul,0, spriteWidth * colliderMul, spriteHeight * colliderMul, 0, spriteHeight * colliderMul});
+        collider.setOrigin(originX, originY);
     }
 
     private float getAngle () {
@@ -78,7 +70,9 @@ public class MainCharacter extends ACharacter {
     }
 
     private void lookAtCursor () {
-        characterSprite.setRotation(getAngle());
+        float angle = getAngle();
+        characterSprite.setRotation(angle);
+        collider.setRotation(angle);
     }
 
     private void shoot() {
@@ -115,16 +109,16 @@ public class MainCharacter extends ACharacter {
         float deltaY = 0;
 
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            deltaY += velY * delta;
+            deltaY += speed * delta;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            deltaY -= velY * delta;
+            deltaY -= speed * delta;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            deltaX += velX * delta;
+            deltaX += speed * delta;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            deltaX -= velX * delta;
+            deltaX -= speed * delta;
         }
 
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
@@ -148,13 +142,14 @@ public class MainCharacter extends ACharacter {
 
         grid.removeEntityByRect(this);
         pos.add(deltaX * multiplier, deltaY * multiplier);
-        boundingBox.setPosition(pos.x + 1, pos.y - 3);
+        collider.setPosition(pos.x, pos.y);
+        characterSprite.setPosition(pos.x, pos.y);
         grid.addEntityByRect(this);
     }
 
     @Override
     public void remove() {
-        Array<GridCell> cellsAtRect = API.get(Grid.class).getCellsAtRect(boundingBox);
+        Array<GridCell> cellsAtRect = API.get(Grid.class).getCellsAt(this);
         for (GridCell gridCell : cellsAtRect) {
             gridCell.remove(this);
         }

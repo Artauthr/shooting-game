@@ -45,8 +45,6 @@ public class CharacterManager implements Disposable {
     public void drawCharacters (PolygonSpriteBatch batch) {
         for (ACharacter character : characters) {
             final Sprite sprite = character.getCharacterSprite();
-            final Vector2 pos = character.getPos();
-            sprite.setOriginBasedPosition(pos.x, pos.y);
             sprite.draw(batch);
         }
     }

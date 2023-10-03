@@ -10,10 +10,7 @@ import com.art.shooter.utils.screenUtils.GridCell;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.utils.Array;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,7 +23,7 @@ public class BulletEntity extends ASimpleEntity {
 
     @Setter
     private Vector2 direction;
-    private final float speed = 720f;
+    private final float speed = 300f;
     private final float lifeTime = 4f;
     private float timer = 0f;
     private GridCell currCell;
@@ -34,13 +31,16 @@ public class BulletEntity extends ASimpleEntity {
     @Setter
     private float damage;
 
+    @Getter
+    private Polygon collider;
+
     public BulletEntity () {
         Texture bullet = new Texture("bullet.png");
         bulletSprite  = new Sprite(bullet);
         bulletSprite.setSize(2, 13);
 
-
-        colliderCircle.setRadius(bulletSprite.getHeight() /2f);
+        collider = new Polygon(new float[]{0,0,bulletSprite.getWidth(),0,bulletSprite.getWidth(),bulletSprite.getHeight(),0,bulletSprite.getHeight()});
+        collider.setOrigin(bulletSprite.getWidth() / 2, bulletSprite.getHeight() / 2);
 
     }
 
@@ -57,7 +57,9 @@ public class BulletEntity extends ASimpleEntity {
 
     @Override
     protected void update(float delta) {
-        bulletSprite.setOriginBasedPosition(pos.x, pos.y);
+        collider.setPosition(pos.x, pos.y);
+        collider.setRotation(rotation);
+        bulletSprite.setPosition(pos.x, pos.y);
         bulletSprite.setRotation(rotation);
         timer += delta;
         if (timer > lifeTime) {
@@ -77,7 +79,6 @@ public class BulletEntity extends ASimpleEntity {
             return;
         }
         this.currCell = grid.addEntityByPosition(this);
-        colliderCircle.setPosition(pos);
         checkForCollision(delta);
     }
 
@@ -85,14 +86,14 @@ public class BulletEntity extends ASimpleEntity {
         if (this.currCell != null) {
             Array<GameObject> gameObjects = currCell.getGameObjects();
             for (GameObject gameObject : gameObjects) {
-                boolean hit = Intersector.overlaps(colliderCircle, gameObject.getBoundingBox());
+                boolean hit = Intersector.overlapConvexPolygons(collider, gameObject.getCollider());
                 if (hit) {
                     if (gameObject instanceof ACharacter) {
                         this.remove();
                         ((ACharacter) gameObject).onHit(delta, direction, this.damage);
                         return;
                     } else if (gameObject instanceof Wall) {
-                        this.bounceBack(this.colliderCircle, gameObject.getBoundingBox());
+                        System.out.println("BOUNCE BACK AAA I HIT THE WALL AA YEE WW");
                         return;
                     }
                 }
@@ -100,19 +101,19 @@ public class BulletEntity extends ASimpleEntity {
         }
     }
 
-    private void bounceBack (Circle colliderCircle, Rectangle wallRect) {
-            if (Math.abs(colliderCircle.x - wallRect.x) < colliderCircle.radius ||
-                    Math.abs(colliderCircle.x - (wallRect.x + wallRect.width)) < colliderCircle.radius) {
-                direction.x = -direction.x;
-                rotation = -rotation;
-            }
-            // Closer to horizontal walls
-            if (Math.abs(colliderCircle.y - wallRect.y) < colliderCircle.radius ||
-                    Math.abs(colliderCircle.y - (wallRect.y + wallRect.height)) < colliderCircle.radius) {
-                direction.y = -direction.y;
-                rotation = -rotation;
-            }
-    }
+//    private void bounceBack (Polygon bulletCollider, Rectangle wallRect) {
+//            if (Math.abs(bulletCollider.x - wallRect.x) < bulletCollider.radius ||
+//                    Math.abs(bulletCollider.x - (wallRect.x + wallRect.width)) < bulletCollider.radius) {
+//                direction.x = -direction.x;
+//                rotation = -rotation;
+//            }
+//            // Closer to horizontal walls
+//            if (Math.abs(bulletCollider.y - wallRect.y) < bulletCollider.radius ||
+//                    Math.abs(bulletCollider.y - (wallRect.y + wallRect.height)) < bulletCollider.radius) {
+//                direction.y = -direction.y;
+//                rotation = -rotation;
+//            }
+//    }
     @Override
     protected void remove() {
         API.get(Grid.class).getCellAt(pos).remove(this);

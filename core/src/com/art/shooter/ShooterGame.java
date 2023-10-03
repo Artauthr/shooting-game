@@ -91,13 +91,16 @@ public class ShooterGame extends ApplicationAdapter {
 
 		API.get(DebugLineRenderer.class).draw(shapeRenderer);
 		batch.begin(); //main systems batch
-		API.get(EntitySystem.class).drawEntities(batch);
-		API.get(CharacterManager.class).drawCharacters(batch);
 
 		if (!API.get(GameLogic.class).isPaused()) {
 			API.get(CharacterManager.class).updateCharacters(deltaTime);
 			API.get(EntitySystem.class).updateEntities(deltaTime);
 		}
+
+		API.get(EntitySystem.class).drawEntities(batch);
+		API.get(CharacterManager.class).drawCharacters(batch);
+
+
 		batch.end();
 
 		//ui related

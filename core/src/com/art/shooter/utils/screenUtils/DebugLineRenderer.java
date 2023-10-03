@@ -1,8 +1,11 @@
 package com.art.shooter.utils.screenUtils;
 
+import com.art.shooter.chars.MainCharacter;
 import com.art.shooter.entities.ASimpleEntity;
+import com.art.shooter.entities.BulletEntity;
 import com.art.shooter.entities.EntitySystem;
 import com.art.shooter.logic.API;
+import com.art.shooter.logic.CharacterManager;
 import com.art.shooter.map.Wall;
 import com.art.shooter.utils.Utils;
 import com.badlogic.gdx.graphics.Color;
@@ -36,12 +39,18 @@ public class DebugLineRenderer {
 //            final Circle colliderCircle = entity.getColliderCircle();
 //            shapeRenderer.circle(colliderCircle.x, colliderCircle.y, colliderCircle.radius);
 //        }
+        CharacterManager characterManager = API.get(CharacterManager.class);
+        MainCharacter mainCharacter = characterManager.getMainCharacter();
+        shapeRenderer.polygon(mainCharacter.getCollider().getTransformedVertices());
+        Rectangle boundingRectangle = mainCharacter.getCollider().getBoundingRectangle();
 
-        for (ASimpleEntity entity : entities) {
-            if (entity instanceof Wall) {
-                drawBoundingBoxAsRect(shapeRenderer, entity.getBoundingBox());
-            }
-        }
+        drawBoundingBoxAsRect(shapeRenderer,boundingRectangle);
+
+//        for (ASimpleEntity entity : entities) {
+//            if (entity instanceof BulletEntity) {
+//                shapeRenderer.polygon(entity.getCollider().getTransformedVertices());
+//            }
+//        }
 
         shapeRenderer.end();
     }

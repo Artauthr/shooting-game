@@ -9,13 +9,13 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Polygon;
 import lombok.Getter;
 
 public class Wall extends ASimpleEntity {
     @Getter
     private Sprite wallSprite;
-    private boolean configured;
+    private boolean placed;
     public Wall () {
         FileHandle handle = Gdx.files.internal("white-pixel.png");
         Texture wallTexture = new Texture(handle);
@@ -23,7 +23,9 @@ public class Wall extends ASimpleEntity {
         wallSprite.setOriginCenter();
         int cellSize = Utils.cellSize;
         wallSprite.setSize(10, cellSize);
-        boundingBox.setSize(10, cellSize);
+
+        collider = new Polygon();
+        collider.setOrigin(wallSprite.getWidth() / 2, wallSprite.getHeight() / 2);
     }
 
     public void addToCell () {
@@ -33,19 +35,13 @@ public class Wall extends ASimpleEntity {
 
     @Override
     protected void update(float delta) {
-        wallSprite.setPosition(pos.x, pos.y);
-        boundingBox.setPosition(pos.x, pos.y);
-        boundingBox.setSize(wallSprite.getWidth(), wallSprite.getHeight());
-        if (!configured) {
+        if (!placed) {  //no need to update much since wall is static
+            wallSprite.setPosition(pos.x, pos.y);
+            collider.setPosition(pos.x, pos.y);
+            collider.setVertices(new float[]{0,0,wallSprite.getWidth(),0,wallSprite.getWidth(),wallSprite.getHeight(),0,wallSprite.getHeight()});
             addToCell();
-            configured = true;
+            placed = true;
         }
-    }
-
-    public void debug (ShapeRenderer shapeRenderer) {
-        shapeRenderer.begin();
-        shapeRenderer.rect(boundingBox.x, boundingBox.y, boundingBox.width, boundingBox.height);
-        shapeRenderer.end();
     }
 
     @Override

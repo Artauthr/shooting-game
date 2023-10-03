@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 
 public class CommonShooterEnemy extends AEnemy {
@@ -32,7 +33,8 @@ public class CommonShooterEnemy extends AEnemy {
         hp = 100;
         damage = 10;
 
-        boundingBox.setSize(20, 22);
+        collider = new Polygon(new float[]{0,0,characterSprite.getWidth(),0,characterSprite.getWidth(),characterSprite.getHeight(),0,characterSprite.getHeight()});
+        collider.setOrigin(characterSprite.getWidth() / 2, characterSprite.getHeight() / 2);
     }
 
     private void simulate (float delta) {
@@ -60,7 +62,7 @@ public class CommonShooterEnemy extends AEnemy {
             pos.y -= direction.y * speed * delta;
         }
         grid.removeEntityByRect(this);
-        boundingBox.setPosition(pos.x + 1, pos.y - 3);
+        collider.setPosition(pos.x, pos.y);
         grid.addEntityByRect(this);
     }
 
@@ -84,6 +86,7 @@ public class CommonShooterEnemy extends AEnemy {
     private void lookAtMainCharacter () {
         float v = getMainCharAngle();
         characterSprite.setRotation(v);
+        collider.setRotation(v);
     }
 
     private float getMainCharAngle () {

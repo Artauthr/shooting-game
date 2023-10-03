@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -97,10 +98,6 @@ public class Grid {
         return !(lowerDiff < upperDiff);
     }
 
-    public float diff (float num) {
-        return num % cellSize;
-    }
-
     public boolean isVertical (float x, float y) {
         float closeX = getLesserDiff(x);
         float closeY = getLesserDiff(y);
@@ -130,25 +127,9 @@ public class Grid {
         return tmp;
     }
 
-    @Deprecated
-    public Array<GridCell> getCellsAt (Circle colliderCircle) {
-        tmp.clear();
-        GridCell centerCell = getCellAt(colliderCircle.x, colliderCircle.y);
-
-        float xPlus = colliderCircle.x + colliderCircle.radius;
-        float xMinus = colliderCircle.x - colliderCircle.radius;
-        GridCell cell1 = getCellAt(xPlus, colliderCircle.y);
-        GridCell cell2 = getCellAt(xMinus, colliderCircle.y);
-        GridCell cell3 = getCellAt(colliderCircle.x, colliderCircle.y + colliderCircle.radius);
-        GridCell cell4 = getCellAt(colliderCircle.x, colliderCircle.y - colliderCircle.radius);
-
-        tmp.add(centerCell);
-        tmp.add(cell1);
-        tmp.add(cell2);
-        tmp.add(cell3);
-        tmp.add(cell4);
-
-        return tmp;
+    public Array<GridCell> getCellsAt (GameObject gameObject) {
+        Rectangle boundingRectangle = gameObject.getCollider().getBoundingRectangle();
+        return getCellsAtRect(boundingRectangle);
     }
 
     public void renderDebug (ShapeRenderer shapeRenderer) {
@@ -192,7 +173,7 @@ public class Grid {
 
 
     public void addEntityByRect (GameObject gameObject) {
-        Rectangle boundingBox = gameObject.getBoundingBox();
+        Rectangle boundingBox = gameObject.getCollider().getBoundingRectangle();
         Array<GridCell> cellsToAdd = getCellsAtRect(boundingBox);
         for (GridCell gridCell : cellsToAdd) {
             gridCell.add(gameObject);
@@ -200,7 +181,7 @@ public class Grid {
     }
 
     public void removeEntityByRect (GameObject gameObject) {
-        Array<GridCell> cellsToRemoveFrom = getCellsAtRect(gameObject.getBoundingBox());
+        Array<GridCell> cellsToRemoveFrom = getCellsAtRect(gameObject.getCollider().getBoundingRectangle());
         for (GridCell gridCell : cellsToRemoveFrom) {
             gridCell.remove(gameObject);
         }
