@@ -1,6 +1,9 @@
 package com.art.shooter.entities;
 
+import com.art.shooter.chars.ACharacter;
 import com.art.shooter.logic.API;
+import com.art.shooter.logic.GameObject;
+import com.art.shooter.map.Wall;
 import com.art.shooter.utils.Utils;
 import com.art.shooter.utils.screenUtils.Grid;
 import com.badlogic.gdx.graphics.Texture;
@@ -38,6 +41,17 @@ public class BulletEntity extends ASimpleEntity {
 
     }
 
+    @Override
+    public void onCollision(GameObject object2) {
+        System.out.println("bullet - on Collision");
+        if (object2 instanceof ACharacter) {
+            System.out.println("bullet hit person");
+            remove();
+        }
+        if (object2 instanceof Wall) {
+            bounceBack();
+        }
+    }
 
     @Override
     protected void create() {

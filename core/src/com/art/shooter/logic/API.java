@@ -3,7 +3,7 @@ package com.art.shooter.logic;
 import com.art.shooter.entities.EntitySystem;
 import com.art.shooter.map.MapManager;
 import com.art.shooter.utils.Resources;
-import com.art.shooter.utils.screenUtils.CollisionDetector;
+import com.art.shooter.utils.screenUtils.CollisionManager;
 import com.art.shooter.utils.screenUtils.DebugLineRenderer;
 import com.art.shooter.utils.screenUtils.Grid;
 import com.art.shooter.utils.screenUtils.MovementGrid;
@@ -39,7 +39,7 @@ public class API {
         register(DebugLineRenderer.class);
         register(MovementGrid.class);
         register(MapManager.class);
-        register(CollisionDetector.class);
+        register(CollisionManager.class);
     }
 
     public static <T> T get (Class<T> clazz) {

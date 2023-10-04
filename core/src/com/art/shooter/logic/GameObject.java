@@ -17,5 +17,5 @@ public abstract class GameObject {
     @Getter @Setter
     protected Vector2 pos = new Vector2();
 
-    public void onHit(GameObject obj2){};
+    public void onCollision(GameObject obj2){};
 }

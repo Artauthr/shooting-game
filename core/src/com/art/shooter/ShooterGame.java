@@ -9,7 +9,7 @@ import com.art.shooter.logic.GameLogic;
 import com.art.shooter.ui.ColorLib;
 import com.art.shooter.ui.GameUI;
 import com.art.shooter.utils.Resources;
-import com.art.shooter.utils.screenUtils.CollisionDetector;
+import com.art.shooter.utils.screenUtils.CollisionManager;
 import com.art.shooter.utils.screenUtils.DebugLineRenderer;
 import com.art.shooter.utils.Utils;
 import com.art.shooter.utils.screenUtils.Grid;
@@ -94,7 +94,7 @@ public class ShooterGame extends ApplicationAdapter {
 		if (!API.get(GameLogic.class).isPaused()) {
 			API.get(CharacterManager.class).updateCharacters(deltaTime);
 			API.get(EntitySystem.class).updateEntities(deltaTime);
-			API.get(CollisionDetector.class).tick(deltaTime);
+			API.get(CollisionManager.class).tick(deltaTime);
 		}
 
 		API.get(EntitySystem.class).drawEntities(batch);
