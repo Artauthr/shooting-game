@@ -1,17 +1,12 @@
 package com.art.shooter.entities;
 
-import com.art.shooter.chars.ACharacter;
 import com.art.shooter.logic.API;
-import com.art.shooter.logic.GameObject;
-import com.art.shooter.map.Wall;
 import com.art.shooter.utils.Utils;
 import com.art.shooter.utils.screenUtils.Grid;
-import com.art.shooter.utils.screenUtils.GridCell;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.*;
-import com.badlogic.gdx.utils.Array;
 import lombok.Getter;
 import lombok.Setter;
 
