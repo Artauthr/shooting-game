@@ -16,6 +16,6 @@ public class GridCell {
     }
 
     public void remove (GameObject gameObject) {
-        this.gameObjects.removeValue(gameObject, true);
+        this.gameObjects.removeValue(gameObject, false);
     }
 }

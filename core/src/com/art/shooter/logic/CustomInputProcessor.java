@@ -14,6 +14,9 @@ import com.badlogic.gdx.math.Vector3;
 public class CustomInputProcessor implements InputProcessor {
     @Override
     public boolean keyDown(int keycode) {
+        if (keycode == Input.Keys.V) {
+            API.get(CharacterManager.class).spawnEnemyAtRandom();
+        }
         if (keycode == Input.Keys.ESCAPE) {
             GameLogic gameLogic = API.get(GameLogic.class);
             if (gameLogic.isPaused()) {

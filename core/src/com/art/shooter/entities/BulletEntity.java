@@ -26,7 +26,6 @@ public class BulletEntity extends ASimpleEntity {
     private final float speed = 300f;
     private final float lifeTime = 4f;
     private float timer = 0f;
-    private GridCell currCell;
 
     @Setter
     private float damage;
@@ -57,8 +56,7 @@ public class BulletEntity extends ASimpleEntity {
 
     @Override
     protected void update(float delta) {
-        collider.setPosition(pos.x, pos.y);
-        collider.setRotation(rotation);
+
         bulletSprite.setPosition(pos.x, pos.y);
         bulletSprite.setRotation(rotation);
         timer += delta;
@@ -67,9 +65,11 @@ public class BulletEntity extends ASimpleEntity {
             return;
         }
         final Grid grid = API.get(Grid.class);
-        grid.removeEntityByPosition(this);
+        grid.removeEntityByRect(this);
+        collider.setRotation(rotation);
         pos.x += direction.x * speed * delta;
         pos.y += direction.y * speed * delta;
+        collider.setPosition(pos.x, pos.y);
         if (pos.x > Utils.camera.viewportWidth || pos.x < 0) {
             setFlaggedToRemove(true);
             return;
@@ -78,42 +78,36 @@ public class BulletEntity extends ASimpleEntity {
             setFlaggedToRemove(true);
             return;
         }
-        this.currCell = grid.addEntityByPosition(this);
-        checkForCollision(delta);
+        grid.addEntityByRect(this);
+//        checkForCollision(delta);
     }
-
-    public void checkForCollision (float delta) {
-        if (this.currCell != null) {
-            Array<GameObject> gameObjects = currCell.getGameObjects();
-            for (GameObject gameObject : gameObjects) {
-                boolean hit = Intersector.overlapConvexPolygons(collider, gameObject.getCollider());
-                if (hit) {
-                    if (gameObject instanceof ACharacter) {
-                        this.remove();
-                        ((ACharacter) gameObject).onHit(delta, direction, this.damage);
-                        return;
-                    } else if (gameObject instanceof Wall) {
-                        System.out.println("BOUNCE BACK AAA I HIT THE WALL AA YEE WW");
-                        return;
-                    }
-                }
-            }
-        }
-    }
-
-//    private void bounceBack (Polygon bulletCollider, Rectangle wallRect) {
-//            if (Math.abs(bulletCollider.x - wallRect.x) < bulletCollider.radius ||
-//                    Math.abs(bulletCollider.x - (wallRect.x + wallRect.width)) < bulletCollider.radius) {
-//                direction.x = -direction.x;
-//                rotation = -rotation;
+//
+//    public void checkForCollision (float delta) {
+//        if (this.currCell != null) {
+//            Array<GameObject> gameObjects = currCell.getGameObjects();
+//            for (GameObject gameObject : gameObjects) {
+//                boolean hit = Intersector.overlapConvexPolygons(collider, gameObject.getCollider());
+//                if (hit) {
+//                    if (gameObject instanceof ACharacter) {
+//                        this.remove();
+//                        ((ACharacter) gameObject).onHit(delta, direction, this.damage);
+//                        return;
+//                    } else if (gameObject instanceof Wall) {
+//                        bounceBack();
+//                        return;
+//                    }
+//                }
 //            }
-//            // Closer to horizontal walls
-//            if (Math.abs(bulletCollider.y - wallRect.y) < bulletCollider.radius ||
-//                    Math.abs(bulletCollider.y - (wallRect.y + wallRect.height)) < bulletCollider.radius) {
-//                direction.y = -direction.y;
-//                rotation = -rotation;
-//            }
+//        }
 //    }
+
+    private void bounceBack () {
+        Vector2 normal = Utils.findWallNormal(this.pos);
+        final Vector2 reflect = Utils.reflect(pos, normal);
+        this.pos.set(reflect);
+    }
+
+
     @Override
     protected void remove() {
         API.get(Grid.class).getCellAt(pos).remove(this);

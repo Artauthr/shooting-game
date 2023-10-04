@@ -16,6 +16,8 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectSet;
+import com.badlogic.gdx.utils.OrderedSet;
 
 public class MainCharacter extends ACharacter {
     private float speed = 240f;
@@ -34,7 +36,7 @@ public class MainCharacter extends ACharacter {
         float spriteWidth = characterSprite.getWidth();
         final float originX = spriteWidth / 2.0f + 0.5f;
         float spriteHeight = characterSprite.getHeight();
-        final float originY = spriteHeight / 2.0f - 2;
+        final float originY = spriteHeight / 2.0f - 3;
         characterSprite.setOrigin(originX, originY);
         float colliderMul = 1.25f;
 
@@ -72,7 +74,9 @@ public class MainCharacter extends ACharacter {
     private void lookAtCursor () {
         float angle = getAngle();
         characterSprite.setRotation(angle);
+        API.get(Grid.class).removeEntityByRect(this);
         collider.setRotation(angle);
+        API.get(Grid.class).addEntityByRect(this);
     }
 
     private void shoot() {
@@ -139,17 +143,16 @@ public class MainCharacter extends ACharacter {
         if (pos.y + deltaY < 0) deltaY = 0;
         if (pos.y + deltaY > Utils.camera.viewportHeight) deltaY = 0;
 
-
         grid.removeEntityByRect(this);
         pos.add(deltaX * multiplier, deltaY * multiplier);
-        collider.setPosition(pos.x, pos.y);
         characterSprite.setPosition(pos.x, pos.y);
+        collider.setPosition(pos.x, pos.y);
         grid.addEntityByRect(this);
     }
 
     @Override
     public void remove() {
-        Array<GridCell> cellsAtRect = API.get(Grid.class).getCellsAt(this);
+        OrderedSet<GridCell> cellsAtRect = API.get(Grid.class).getCellsAt(this);
         for (GridCell gridCell : cellsAtRect) {
             gridCell.remove(this);
         }

@@ -11,11 +11,12 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.OrderedSet;
 import lombok.Getter;
 
 // the griddy
 public class Grid {
-    private Array<GridCell> tmp = new Array<>();
+    private OrderedSet<GridCell> tmp = new OrderedSet<>();
 
     @Getter
     private int cellSize;
@@ -114,7 +115,7 @@ public class Grid {
         return getCellAt(vec2.x, vec2.y);
     }
 
-    public Array<GridCell> getCellsAtRect (Rectangle rectangle) {
+    public OrderedSet<GridCell> getCellsAtRect (Rectangle rectangle) {
         final float x0 = rectangle.x;
         final float y0 = rectangle.y;
         final float x1 = rectangle.x + rectangle.width;
@@ -127,7 +128,7 @@ public class Grid {
         return tmp;
     }
 
-    public Array<GridCell> getCellsAt (GameObject gameObject) {
+    public OrderedSet<GridCell> getCellsAt (GameObject gameObject) {
         Rectangle boundingRectangle = gameObject.getCollider().getBoundingRectangle();
         return getCellsAtRect(boundingRectangle);
     }
@@ -174,14 +175,14 @@ public class Grid {
 
     public void addEntityByRect (GameObject gameObject) {
         Rectangle boundingBox = gameObject.getCollider().getBoundingRectangle();
-        Array<GridCell> cellsToAdd = getCellsAtRect(boundingBox);
+        OrderedSet<GridCell> cellsToAdd = getCellsAtRect(boundingBox);
         for (GridCell gridCell : cellsToAdd) {
             gridCell.add(gameObject);
         }
     }
 
     public void removeEntityByRect (GameObject gameObject) {
-        Array<GridCell> cellsToRemoveFrom = getCellsAtRect(gameObject.getCollider().getBoundingRectangle());
+        OrderedSet<GridCell> cellsToRemoveFrom = getCellsAtRect(gameObject.getCollider().getBoundingRectangle());
         for (GridCell gridCell : cellsToRemoveFrom) {
             gridCell.remove(gameObject);
         }
@@ -199,6 +200,11 @@ public class Grid {
         }
         System.out.println("Occupied Cells " + count);
     }
+
+    public GridCell[][] getCells() {
+        return this.cells;
+    }
+
 
 
 }

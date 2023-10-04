@@ -1,56 +1,55 @@
 package com.art.shooter.utils.screenUtils;
 
+import com.art.shooter.chars.ACharacter;
 import com.art.shooter.chars.MainCharacter;
 import com.art.shooter.entities.ASimpleEntity;
-import com.art.shooter.entities.BulletEntity;
 import com.art.shooter.entities.EntitySystem;
 import com.art.shooter.logic.API;
 import com.art.shooter.logic.CharacterManager;
-import com.art.shooter.map.Wall;
-import com.art.shooter.utils.Utils;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 
 public class DebugLineRenderer {
 
+    private boolean debugEntities = false;
+    private boolean debugCharacters = true;
+    private boolean debugCharacterRects = true;
+
+
     public DebugLineRenderer () {
     }
 
     public void draw (ShapeRenderer shapeRenderer) {
-        final OrthographicCamera camera = Utils.camera;
-        final float viewportWidth = camera.viewportWidth;
-        final float viewportHeight = camera.viewportHeight;
-
         shapeRenderer.begin();
-        //bounds
-        shapeRenderer.line(1, 0, 1, viewportHeight);
-        shapeRenderer.line(1, viewportHeight - 2, viewportWidth, viewportHeight - 2);
-        shapeRenderer.line(1, 0, viewportWidth, 0);
-        shapeRenderer.line(viewportWidth, 0, viewportWidth, viewportHeight);
-        // end bounds
 
+        // entities
         final EntitySystem entitySystem = API.get(EntitySystem.class);
         final Array<ASimpleEntity> entities = entitySystem.getEntities();
-//        for (ASimpleEntity entity : entities) {
-//            final Circle colliderCircle = entity.getColliderCircle();
-//            shapeRenderer.circle(colliderCircle.x, colliderCircle.y, colliderCircle.radius);
-//        }
+
+        //characters
         CharacterManager characterManager = API.get(CharacterManager.class);
+        final Array<ACharacter> characters = characterManager.getCharacters();
         MainCharacter mainCharacter = characterManager.getMainCharacter();
-        shapeRenderer.polygon(mainCharacter.getCollider().getTransformedVertices());
-        Rectangle boundingRectangle = mainCharacter.getCollider().getBoundingRectangle();
 
-        drawBoundingBoxAsRect(shapeRenderer,boundingRectangle);
 
-//        for (ASimpleEntity entity : entities) {
-//            if (entity instanceof BulletEntity) {
-//                shapeRenderer.polygon(entity.getCollider().getTransformedVertices());
-//            }
-//        }
+        if (debugEntities) {
+            for (ASimpleEntity entity : entities) {
+                shapeRenderer.polygon(entity.getCollider().getTransformedVertices());
+
+            }
+        }
+
+        if (debugCharacters) {
+            for (ACharacter character : characters) {
+                shapeRenderer.polygon(character.getCollider().getTransformedVertices());
+                if (debugCharacterRects) {
+                    final Rectangle box = character.getCollider().getBoundingRectangle();
+                    shapeRenderer.rect(box.x, box.y, box.width, box.height, Color.RED, Color.RED, Color.RED, Color.RED);
+                }
+            }
+        }
 
         shapeRenderer.end();
     }

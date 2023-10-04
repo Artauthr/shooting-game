@@ -5,7 +5,6 @@ import com.art.shooter.entities.BulletEntity;
 import com.art.shooter.entities.EntitySystem;
 import com.art.shooter.logic.API;
 import com.art.shooter.logic.CharacterManager;
-import com.art.shooter.utils.Utils;
 import com.art.shooter.utils.screenUtils.Grid;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -26,15 +25,17 @@ public class CommonShooterEnemy extends AEnemy {
         characterSprite = new Sprite(img);
         characterSprite.setScale(3f);
 
-        final float originX = characterSprite.getWidth() / 2.0f;
-        final float originY = characterSprite.getHeight() / 2.0f;
+        final float spriteWidth = characterSprite.getWidth();
+        final float originX = spriteWidth / 2.0f + 0.5f;
+        final float spriteHeight = characterSprite.getHeight();
+        final float originY = spriteHeight / 2.0f - 3f;
         characterSprite.setOrigin(originX, originY);
-
+        float colliderMul = 1.25f;
         hp = 100;
         damage = 10;
 
-        collider = new Polygon(new float[]{0,0,characterSprite.getWidth(),0,characterSprite.getWidth(),characterSprite.getHeight(),0,characterSprite.getHeight()});
-        collider.setOrigin(characterSprite.getWidth() / 2, characterSprite.getHeight() / 2);
+        collider = new Polygon(new float[]{0,0, spriteWidth * colliderMul,0, spriteWidth * colliderMul, spriteHeight * colliderMul, 0, spriteHeight * colliderMul});
+        collider.setOrigin(spriteWidth / 2, spriteHeight / 2);
     }
 
     private void simulate (float delta) {
@@ -46,7 +47,8 @@ public class CommonShooterEnemy extends AEnemy {
     private void move (float delta) {
         CharacterManager characterManager = API.get(CharacterManager.class);
         MainCharacter mainCharacter = characterManager.getMainCharacter();
-        float distance = Utils.getDistanceBetweenTwoVectors(mainCharacter.getPos(), this.pos);
+//        float distance = Utils.getDistanceBetweenTwoVectors(mainCharacter.getPos(), this.pos);
+        float distance = Vector2.dst(mainCharacter.getPos().x,mainCharacter.getPos().y, this.pos.x, this.pos.y);
         Vector2 direction = getDirection();
 
         Grid grid = API.get(Grid.class);
@@ -63,6 +65,7 @@ public class CommonShooterEnemy extends AEnemy {
         }
         grid.removeEntityByRect(this);
         collider.setPosition(pos.x, pos.y);
+        characterSprite.setPosition(pos.x, pos.y);
         grid.addEntityByRect(this);
     }
 
@@ -86,7 +89,9 @@ public class CommonShooterEnemy extends AEnemy {
     private void lookAtMainCharacter () {
         float v = getMainCharAngle();
         characterSprite.setRotation(v);
+        API.get(Grid.class).removeEntityByRect(this);
         collider.setRotation(v);
+        API.get(Grid.class).addEntityByRect(this);
     }
 
     private float getMainCharAngle () {
