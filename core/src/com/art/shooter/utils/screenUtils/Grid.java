@@ -49,6 +49,9 @@ public class Grid {
         int j = Math.min(u, colAmount - 1);
         int i = Math.min(v,rowAmount - 1);
 
+        i = Math.max(i, 0);
+        j = Math.max(j, 0);
+
         return cells[i][j];
 
     }

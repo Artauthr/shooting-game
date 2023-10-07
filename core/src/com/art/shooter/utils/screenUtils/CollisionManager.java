@@ -27,18 +27,20 @@ public class CollisionManager {
 
     private void handleCollisionsInCell(GridCell cell) {
         Array<GameObject> gameObjects = cell.getGameObjects();
+        int size = gameObjects.size;
         if (gameObjects.size < 2) return;
 
-        for (int i = 0, size = gameObjects.size; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             GameObject obj1 = gameObjects.get(i);
             for (int j = i + 1; j < size; j++) {
                 GameObject obj2 = gameObjects.get(j);
-                if (!Intersector.overlapConvexPolygons(obj1.getCollider(), obj2.getCollider())) continue;
-                obj1.onCollision(obj2);
-                obj2.onCollision(obj1);
-                System.out.println("obj1.getClass().getSimpleName() = " + obj1.getClass().getSimpleName());
-                System.out.println("obj2.getClass().getSimpleName() = " + obj2.getClass().getSimpleName());
-//                System.out.println("two things hit each other bro");
+                if (Intersector.overlapConvexPolygons(obj1.getCollider(), obj2.getCollider())) {
+                    obj2.onCollision(obj1);
+                    obj1.onCollision(obj2);
+                }
+//                System.out.println("obj1.getClass().getSimpleName() = " + obj1.getClass().getSimpleName());
+//                System.out.println("obj2.getClass().getSimpleName() = " + obj2.getClass().getSimpleName());
+//                return;
             }
         }
     }

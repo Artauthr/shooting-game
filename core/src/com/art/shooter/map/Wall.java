@@ -6,6 +6,7 @@ import com.art.shooter.utils.Utils;
 import com.art.shooter.utils.screenUtils.Grid;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -20,11 +21,12 @@ public class Wall extends ASimpleEntity {
         FileHandle handle = Gdx.files.internal("white-pixel.png");
         Texture wallTexture = new Texture(handle);
         wallSprite = new Sprite(wallTexture);
+        wallSprite.setColor(Color.RED);
         wallSprite.setOriginCenter();
         int cellSize = Utils.cellSize;
         wallSprite.setSize(10, cellSize);
 
-        collider = new Polygon();
+        collider = new Polygon(new float[]{0,0,wallSprite.getWidth(),0,wallSprite.getWidth(),wallSprite.getHeight(),0,wallSprite.getHeight()});
         collider.setOrigin(wallSprite.getWidth() / 2, wallSprite.getHeight() / 2);
     }
 

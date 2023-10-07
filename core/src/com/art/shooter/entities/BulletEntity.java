@@ -47,9 +47,11 @@ public class BulletEntity extends ASimpleEntity {
         if (object2 instanceof ACharacter) {
             System.out.println("bullet hit person");
             remove();
+            return;
         }
         if (object2 instanceof Wall) {
             bounceBack();
+            return;
         }
     }
 
@@ -68,6 +70,7 @@ public class BulletEntity extends ASimpleEntity {
 
         bulletSprite.setPosition(pos.x, pos.y);
         bulletSprite.setRotation(rotation);
+        collider.setRotation(rotation);
         timer += delta;
         if (timer > lifeTime) {
             remove();
@@ -111,9 +114,8 @@ public class BulletEntity extends ASimpleEntity {
 //    }
 
     private void bounceBack () {
-        Vector2 normal = Utils.findWallNormal(this.pos);
-        final Vector2 reflect = Utils.reflect(pos, normal);
-        this.pos.set(reflect);
+        pos.scl(-1);
+        rotation = -rotation;
     }
 
 

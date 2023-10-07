@@ -13,9 +13,9 @@ import com.badlogic.gdx.utils.Array;
 
 public class DebugLineRenderer {
 
-    private boolean debugEntities = false;
-    private boolean debugCharacters = true;
-    private boolean debugCharacterRects = true;
+    private boolean debugEntities = true;
+    private boolean debugCharacters = false;
+    private boolean debugCharacterRects = false;
 
 
     public DebugLineRenderer () {
@@ -37,7 +37,6 @@ public class DebugLineRenderer {
         if (debugEntities) {
             for (ASimpleEntity entity : entities) {
                 shapeRenderer.polygon(entity.getCollider().getTransformedVertices());
-
             }
         }
 
