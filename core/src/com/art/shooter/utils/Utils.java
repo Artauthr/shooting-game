@@ -14,6 +14,9 @@ public class Utils {
     public static ExtendViewport mainViewport;
     public static OrthographicCamera camera;
     public static int cellSize;
+    public static int WORLD_WIDTH = 200;
+    public static int WORLD_HEIGHT = 200;
+
     public static float getDistanceBetweenTwoVectors (Vector2 v1, Vector2 v2) {
         if (v1 == null || v2 == null) {
             throw new IllegalArgumentException("Vectors must not be null");

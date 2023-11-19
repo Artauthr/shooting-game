@@ -26,7 +26,7 @@ public class BulletEntity extends ASimpleEntity {
 
     @Setter
     private Vector2 direction;
-    private final float speed = 720f;
+    private final float speed = 470f;
     private final float lifeTime = 4f;
     private float timer = 0f;
     private GridCell currCell;
@@ -37,7 +37,7 @@ public class BulletEntity extends ASimpleEntity {
     public BulletEntity () {
         Texture bullet = new Texture("bullet.png");
         bulletSprite  = new Sprite(bullet);
-        bulletSprite.setSize(2, 13);
+        bulletSprite.setSize(1, 7);
 
 
         colliderCircle.setRadius(bulletSprite.getHeight() /2f);

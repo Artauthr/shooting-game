@@ -23,7 +23,7 @@ public class CommonShooterEnemy extends AEnemy {
     public CommonShooterEnemy() {
         Texture img = new Texture("enemy.png");
         characterSprite = new Sprite(img);
-        characterSprite.setScale(3f);
+//        characterSprite.setScale(1f);
 
         final float originX = characterSprite.getWidth() / 2.0f;
         final float originY = characterSprite.getHeight() / 2.0f;
@@ -37,7 +37,7 @@ public class CommonShooterEnemy extends AEnemy {
 
     private void simulate (float delta) {
         lookAtMainCharacter();
-        move(delta);
+//        move(delta);
 //        shootAtMainCharacter(delta);
     }
 

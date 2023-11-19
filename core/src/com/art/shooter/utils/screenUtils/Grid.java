@@ -15,22 +15,21 @@ import lombok.Getter;
 // the griddy
 public class Grid {
     private Array<GridCell> tmp = new Array<>();
-
-    @Getter
-    private int cellSize;
     private int rowAmount;
     private int colAmount;
     private GridCell[][] cells;
 
+    @Getter
+    private final float CELL_SIZE = 5;
+
     public Grid() {
-        construct(Utils.camera.viewportWidth, Utils.camera.viewportHeight);
+        construct(Utils.WORLD_WIDTH, Utils.WORLD_HEIGHT);
     }
 
     private void construct (float width, float height) {
-        this.cellSize = 80;
         //these better be divisible or we gonna have problems kid
-        this.colAmount = (int) (width / 80);
-        this.rowAmount = (int) (height / 80);
+        this.colAmount = (int) (width / CELL_SIZE);
+        this.rowAmount = (int) (height / CELL_SIZE);
 
         cells = new GridCell[rowAmount][colAmount];
 
@@ -40,12 +39,13 @@ public class Grid {
                 cells[i][j] = new GridCell();
             }
         }
+        System.out.println("grid constructed");
 
     }
 
     public GridCell getCellAt (float x, float y) {
-        final int u = (int) (x / cellSize);
-        final int v = (int) (y / cellSize);
+        final int u = (int) (x / CELL_SIZE);
+        final int v = (int) (y / CELL_SIZE);
 
         int j = Math.min(u, colAmount - 1);
         int i = Math.min(v,rowAmount - 1);
@@ -55,28 +55,28 @@ public class Grid {
     }
 
     public Vector2 getOriginPoint (float x, float y) {
-        final float u = x % cellSize;
+        final float u = x % CELL_SIZE;
         float originX = x - u;
 
-        final float v = y % cellSize;
+        final float v = y % CELL_SIZE;
         float originY = y - v;
 
         return new Vector2(originX, originY);
     }
 
     public float getLesserDiff (float point) {
-        float difference = point % cellSize;
+        float difference = point % CELL_SIZE;
         float lowerBound = point - difference;
-        float upperBound = lowerBound + cellSize;
+        float upperBound = lowerBound + CELL_SIZE;
         float lowerDiff = Math.abs(point - lowerBound);
         float upperDiff = Math.abs(point - upperBound);
         return Math.min(lowerDiff, upperDiff);
     }
 
     public float getClosestGridPoint (float point) {
-        float difference = point % cellSize;
+        float difference = point % CELL_SIZE;
         float lowerBound = point - difference;
-        float upperBound = lowerBound + cellSize;
+        float upperBound = lowerBound + CELL_SIZE;
         float lowerDiff = Math.abs(point - lowerBound);
         float upperDiff = Math.abs(point - upperBound);
 
@@ -88,9 +88,9 @@ public class Grid {
     }
 
     public boolean isUpperBound (float point) {
-        float difference = point % cellSize;
+        float difference = point % CELL_SIZE;
         float lowerBound = point - difference;
-        float upperBound = lowerBound + cellSize;
+        float upperBound = lowerBound + CELL_SIZE;
         float lowerDiff = Math.abs(point - lowerBound);
         float upperDiff = Math.abs(point - upperBound);
 
@@ -98,7 +98,7 @@ public class Grid {
     }
 
     public float diff (float num) {
-        return num % cellSize;
+        return num % CELL_SIZE;
     }
 
     public boolean isVertical (float x, float y) {
@@ -162,15 +162,15 @@ public class Grid {
 
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[i].length; j++) {
-                final float cellCenterX = j * cellSize;
-                final float cellCenterY = i * cellSize;
+                final float cellCenterX = j * CELL_SIZE;
+                final float cellCenterY = i * CELL_SIZE;
                 final GridCell gridCell = cells[i][j];
                 if (gridCell.getGameObjects().size > 0) {
                     Color greenTransparent = Color.GREEN;
                     greenTransparent.a = 0.43f;
-                    shapeRenderer.rect(cellCenterX, cellCenterY, cellSize, cellSize, greenTransparent, greenTransparent, greenTransparent, greenTransparent);
+                    shapeRenderer.rect(cellCenterX, cellCenterY, CELL_SIZE, CELL_SIZE, greenTransparent, greenTransparent, greenTransparent, greenTransparent);
                 } else {
-                    shapeRenderer.rect(cellCenterX, cellCenterY, cellSize, cellSize);
+                    shapeRenderer.rect(cellCenterX, cellCenterY, CELL_SIZE, CELL_SIZE);
                 }
             }
         }

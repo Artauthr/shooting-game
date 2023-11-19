@@ -25,7 +25,7 @@ import com.badlogic.gdx.utils.Array;
 public class MainCharacter extends ACharacter {
     private float velX;
     private float velY;
-    private final float SPEED = 240f;
+    private final float SPEED = 100f;
     private final float DASH_DISTANCE = 800f;
     private Vector2 direction;
     private final Vector2 muzzleOffset;
@@ -41,7 +41,7 @@ public class MainCharacter extends ACharacter {
 
         Texture img = new Texture("shooter.png");
         characterSprite = new Sprite(img);
-        characterSprite.setScale(3f);
+//        characterSprite.setScale(3f);
 
         final float originX = characterSprite.getWidth() / 2.0f + 0.5f;
         final float originY = characterSprite.getHeight() / 2.0f - 2;
@@ -141,15 +141,18 @@ public class MainCharacter extends ACharacter {
         final Grid grid = API.get(Grid.class);
 
         if (pos.x + deltaX < 0) deltaX = 0;
-        if (pos.x + deltaX > Utils.camera.viewportWidth) deltaX = 0;
+        if (pos.x + deltaX > Utils.mainViewport.getWorldWidth()) deltaX = 0;
         if (pos.y + deltaY < 0) deltaY = 0;
-        if (pos.y + deltaY > Utils.camera.viewportHeight) deltaY = 0;
+        if (pos.y + deltaY > Utils.mainViewport.getWorldHeight()) deltaY = 0;
 
 
         grid.removeEntityByRect(this);
         pos.add(deltaX * multiplier, deltaY * multiplier);
         boundingBox.setPosition(pos.x + 1, pos.y - 3);
         grid.addEntityByRect(this);
+        Camera cam = Utils.mainViewport.getCamera();
+        cam.position.set(this.pos.x, this.pos.y, 0);
+        cam.update();
     }
 
     @Override

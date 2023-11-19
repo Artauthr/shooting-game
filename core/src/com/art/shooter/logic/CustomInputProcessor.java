@@ -104,21 +104,21 @@ public class CustomInputProcessor implements InputProcessor {
         float newZoom = camera.zoom + deltaZoom * amountY;
 
         // set minimum and maximum zoom levels
-        float minZoom = 5f; // TODO: 04.09.23 make static or a field variable
-        float maxZoom = 8f; // TODO: 04.09.23 make static or a field variable
-        if (newZoom < minZoom) {
-            newZoom = minZoom;
-        } else if (newZoom > maxZoom) {
-            newZoom = maxZoom;
-        }
+//        float minZoom = 5f; // TODO: 04.09.23 make static or a field variable
+//        float maxZoom = 8f; // TODO: 04.09.23 make static or a field variable
+//        if (newZoom < minZoom) {
+//            newZoom = minZoom;
+//        } else if (newZoom > maxZoom) {
+//            newZoom = maxZoom;
+//        }
 
         // calculate the position adjustments to keep the mouse position constant
         float deltaX = (mouseWorldCoords.x - camera.position.x) * (1 - newZoom / camera.zoom);
         float deltaY = (mouseWorldCoords.y - camera.position.y) * (1 - newZoom / camera.zoom);
 
         // update the camera's zoom and position
-//        camera.zoom = newZoom;
-//        camera.position.add(deltaX, deltaY, 0);
+        camera.zoom = newZoom;
+        camera.position.add(deltaX, deltaY, 0);
         camera.update();
         return true;
     }
